@@ -1,0 +1,230 @@
+.home {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background: #fdfdfd;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+/* Tema oscuro para home */
+[data-theme="dark"] .home {
+  color: #e6e6e6;
+  background: #141414;
+}
+
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 60px 10%;
+  background: linear-gradient(135deg, #d0eafc, #f1f8ff);
+  border-bottom: 2px solid #d6e4f0;
+  flex: 1;
+  min-height: 50vh;
+  transition: all 0.3s ease;
+}
+
+/* Tema oscuro para hero */
+[data-theme="dark"] .hero {
+  background: linear-gradient(135deg, #1a2332, #2c3e50);
+  border-bottom: 2px solid #34495e;
+}
+
+.hero-content {
+  flex: 1;
+  min-width: 280px;
+}
+
+.hero-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #005a8d;
+  transition: color 0.3s ease;
+}
+
+/* Tema oscuro para título principal */
+[data-theme="dark"] .hero-content h1 {
+  color: #74b9ff;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #444;
+  transition: color 0.3s ease;
+}
+
+/* Tema oscuro para párrafo */
+[data-theme="dark"] .hero-content p {
+  color: #bdc3c7;
+}
+
+.cta-button {
+  padding: 12px 24px;
+  font-size: 1rem;
+  background-color: #2a9d8f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #21867a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(42, 157, 143, 0.3);
+}
+
+/* Tema oscuro para botón */
+[data-theme="dark"] .cta-button {
+  background-color: #00b894;
+  box-shadow: 0 2px 8px rgba(0, 184, 148, 0.2);
+}
+
+[data-theme="dark"] .cta-button:hover {
+  background-color: #00a085;
+  box-shadow: 0 4px 12px rgba(0, 184, 148, 0.4);
+}
+
+.hero-image {
+  flex: 1;
+  max-width: 400px;
+  width: 100%;
+  margin-top: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 90, 141, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Tema oscuro para imagen */
+[data-theme="dark"] .hero-image {
+  box-shadow: 0 8px 16px rgba(116, 185, 255, 0.3);
+  filter: brightness(0.9);
+}
+
+.benefits {
+  padding: 60px 10%;
+  background: #ffffff;
+  text-align: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+/* Tema oscuro para sección benefits */
+[data-theme="dark"] .benefits {
+  background: #1e1e1e;
+}
+
+.benefits h2 {
+  font-size: 2rem;
+  margin-bottom: 40px;
+  color: #1e1e1e;
+  transition: color 0.3s ease;
+}
+
+/* Tema oscuro para título de benefits */
+[data-theme="dark"] .benefits h2 {
+  color: #f8f9fa;
+}
+
+.benefits h2 .brand {
+  color: #2a9d8f;
+  transition: color 0.3s ease;
+}
+
+/* Tema oscuro para marca */
+[data-theme="dark"] .benefits h2 .brand {
+  color: #00b894;
+}
+
+.benefits-grid {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.benefit-item {
+  background: #f8f9fa;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+/* Tema oscuro para items de beneficios */
+[data-theme="dark"] .benefit-item {
+  background: #2c3e50;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.benefit-item:hover {
+  transform: translateY(-5px);
+}
+
+/* Tema oscuro hover para items */
+[data-theme="dark"] .benefit-item:hover {
+  background: #34495e;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.benefit-item img {
+  max-width: 60px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+/* Tema oscuro para imágenes de beneficios */
+[data-theme="dark"] .benefit-item img {
+  filter: brightness(1.2) contrast(1.1);
+}
+
+.benefit-item h3 {
+  font-size: 1.3rem;
+  color: #005a8d;
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+}
+
+/* Tema oscuro para títulos de beneficios */
+[data-theme="dark"] .benefit-item h3 {
+  color: #74b9ff;
+}
+
+.benefit-item p {
+  color: #555;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+/* Tema oscuro para párrafos de beneficios */
+[data-theme="dark"] .benefit-item p {
+  color: #bdc3c7;
+}
+
+/* Media queries para mejorar la responsividad */
+@media (max-width: 768px) {
+  .hero {
+    padding: 40px 5%;
+    min-height: 60vh;
+  }
+ 
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+ 
+  .hero-content p {
+    font-size: 1rem;
+  }
+ 
+  .benefits {
+    padding: 40px 5%;
+  }
+ 
+  .benefits h2 {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,44 @@
+@import './variables.css';
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh; /* Ajuste para que ocupe toda la pantalla */
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100vh;
+  background-color: var(--sidebar-bg);
+  color: white;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.main-content {
+  flex: 1;
+  /* margin-left: 250px; */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Que tome toda la pantalla */
+}
+
+.content {
+  flex-grow: 1; /* Para que ocupe todo el espacio disponible */
+  padding: 20px;
+  /* overflow-y: auto; */
+}
+
+.footer {
+  background: var(--footer-bg);
+  color: var(--footer-text);
+  text-align: center;
+  padding: 20px 50px;
+  width: 100%;
+}
