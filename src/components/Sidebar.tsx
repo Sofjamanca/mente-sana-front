@@ -1,0 +1,311 @@
+import React, { useState, useEffect } from "react";
+import {
+  UserOutlined,
+  CalendarOutlined,
+  FileTextOutlined,
+  InfoCircleOutlined,
+  MoonOutlined,
+  SunOutlined,
+  EditOutlined,
+  SettingOutlined,
+  LogoutOutlined,
+  HeartOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined
+} from "@ant-design/icons";
+import { Menu, Switch, Button, Typography, Space } from "antd";
+import type { MenuProps, MenuTheme } from "antd";
+
+const { Title, Text } = Typography;
+
+type MenuItem = Required<MenuProps>["items"][number];
+
+const items: MenuItem[] = [
+  {
+    key: "profile",
+    label: "Mi Perfil",
+    icon: <UserOutlined />,
+    children: [
+      { 
+        key: "edit", 
+        label: "Editar Perfil", 
+        icon: <EditOutlined />,
+      },
+      { 
+        key: "settings", 
+        label: "Configuraciones", 
+        icon: <SettingOutlined />,
+      },
+      { 
+        key: "logout", 
+        label: "Cerrar Sesión", 
+        icon: <LogoutOutlined style={{ color: '#ff4d4f' }} />,
+      },
+    ],
+  },
+  {
+    key: "events",
+    label: "Eventos",
+    icon: <CalendarOutlined />,
+    children: [
+      { key: "upcoming", label: "Próximos Eventos" },
+      { key: "past", label: "Eventos Pasados" },
+    ],
+  },
+  {
+    key: "dailySummary",
+    label: "Resumen Diario",
+    icon: <FileTextOutlined />,
+  },
+  {
+    key: "about",
+    label: "Acerca de",
+    icon: <InfoCircleOutlined />,
+  },
+];
+
+interface SidebarProps {
+  theme: "dark" | "light"; 
+  onThemeChange?: (theme: "dark" | "light") => void;
+  onMenuClick?: (key: string) => void;
+}
+
+
+const ImprovedSidebar: React.FC<SidebarProps> = ({ onThemeChange, onMenuClick }) => {
+  const [theme, setTheme] = useState<MenuTheme>("light");
+  const [current, setCurrent] = useState("profile");
+  const [collapsed, setCollapsed] = useState(false);
+
+  const isDark = theme === "dark";
+
+  const applyThemeToBody = (newTheme: "dark" | "light") => {
+    document.body.setAttribute("data-theme", newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+  };
+
+  const changeTheme = (value: boolean) => {
+    const newTheme = value ? "dark" : "light";
+    setTheme(newTheme);
+    
+    applyThemeToBody(newTheme);
+    
+    try {
+      localStorage.setItem("theme", newTheme);
+    } catch (error) {
+      console.warn("No se pudo guardar el tema en localStorage:", error);
+    }
+    onThemeChange?.(newTheme);
+  };
+
+useEffect(() => {
+  let savedTheme: MenuTheme = "light"; 
+
+  try {
+    const storedTheme = localStorage.getItem("theme");
+    if (storedTheme === "dark" || storedTheme === "light") {
+      savedTheme = storedTheme;
+    }
+  } catch (error) {
+    console.warn("No se pudo acceder a localStorage:", error);
+  }
+
+  setTheme(savedTheme);
+  applyThemeToBody(savedTheme);
+}, []);
+
+  const onClick: MenuProps["onClick"] = (e) => {
+    console.log("Navegando a:", e.key);
+    setCurrent(e.key);
+    onMenuClick?.(e.key);
+  };
+
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
+  };
+
+  return (
+    <div 
+      style={{ 
+        minWidth: collapsed ? 80 : 320,
+        width: collapsed ? 80 : '20vw',
+        maxWidth: collapsed ? 80 : 400,
+        background: isDark ? '#001529' : '#fff',
+        borderRight: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`,
+        transition: 'all 0.2s',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+        boxShadow: '2px 0 8px rgba(0,0,0,0.1)'
+      }}
+    >
+      <div style={{ 
+        padding: collapsed ? '16px 12px' : '20px 24px',
+        borderBottom: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`,
+        background: isDark ? '#002140' : '#fafafa',
+        transition: 'all 0.2s'
+      }}>
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: collapsed ? 'center' : 'space-between',
+          marginBottom: collapsed ? '0' : '16px'
+        }}>
+          {!collapsed && (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <HeartOutlined style={{ 
+                fontSize: '24px', 
+                color: '#ff4d4f', 
+                marginRight: '12px' 
+              }} />
+              <Title 
+                level={4} 
+                style={{ 
+                  color: isDark ? '#fff' : '#000', 
+                  margin: '0',
+                  fontWeight: 600
+                }}
+              >
+                Mente Sana
+              </Title>
+            </div>
+          )}
+          {collapsed && (
+            <HeartOutlined style={{ 
+              fontSize: '24px', 
+              color: '#ff4d4f'
+            }} />
+          )}
+        </div>
+        
+        {!collapsed && (
+          <Space direction="vertical" size="small" style={{ width: '100%' }}>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between' 
+            }}>
+              <Text style={{ 
+                color: isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)',
+                fontSize: '12px'
+              }}>
+                Tema
+              </Text>
+              <Switch
+                size="small"
+                checked={isDark}
+                onChange={changeTheme}
+                checkedChildren={<MoonOutlined style={{ fontSize: '10px' }} />}
+                unCheckedChildren={<SunOutlined style={{ fontSize: '10px' }} />}
+                style={{ 
+                  backgroundColor: isDark ? '#1890ff' : '#52c41a'
+                }}
+              />
+            </div>
+            <Text style={{ 
+              color: isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)',
+              fontSize: '11px',
+              fontStyle: 'italic'
+            }}>
+              Tu bienestar, nuestra prioridad
+            </Text>
+          </Space>
+        )}
+      </div>
+
+      {/* Botón de colapsar */}
+      <Button
+        type="text"
+        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        onClick={toggleCollapsed}
+        style={{
+          position: 'absolute',
+          top: '16px',
+          right: '-12px',
+          zIndex: 1000,
+          background: isDark ? '#1890ff' : '#fff',
+          border: `1px solid ${isDark ? '#1890ff' : '#d9d9d9'}`,
+          borderRadius: '50%',
+          width: '24px',
+          height: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '12px',
+          color: isDark ? '#fff' : '#1890ff',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+          transition: 'all 0.2s'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.1)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+        }}
+      />
+
+      {/* Menú */}
+      <div style={{ flex: 1}}>
+        <Menu
+          theme={theme}
+          onClick={onClick}
+          style={{ 
+            border: 'none',
+            fontSize: '14px',
+            background: 'transparent'
+          }}
+          defaultOpenKeys={collapsed ? [] : ["profile"]}
+          selectedKeys={[current]}
+          mode="inline"
+          inlineCollapsed={collapsed}
+          items={items}
+        />
+      </div>
+
+      {/* Footer del Sidebar */}
+      {!collapsed && (
+        <div style={{ 
+          padding: '16px 24px',
+          borderTop: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`,
+          background: isDark ? '#000c17' : '#f9f9f9'
+        }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center',
+            marginBottom: '8px'
+          }}>
+            <div style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              background: `linear-gradient(135deg, ${isDark ? '#1890ff' : '#52c41a'}, ${isDark ? '#722ed1' : '#1890ff'})`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: '12px'
+            }}>
+              <UserOutlined style={{ color: '#fff', fontSize: '16px' }} />
+            </div>
+            <div>
+              <Text strong style={{ 
+                color: isDark ? '#fff' : '#000',
+                fontSize: '14px',
+                display: 'block',
+                lineHeight: '1.2'
+              }}>
+                Usuario
+              </Text>
+              <Text style={{ 
+                color: isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)',
+                fontSize: '12px'
+              }}>
+                Conectado
+              </Text>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ImprovedSidebar;
