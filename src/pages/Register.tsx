@@ -6,11 +6,48 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
-  const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Registrando:", name, email, password);
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Guardar el token en localStorage
+        localStorage.setItem("token", data.token);
+        console.log("Login exitoso, token:", data.token);
+        
+        // Redirigir al dashboard o página principal
+        navigate("/dashboard");
+      } else {
+        // Manejar errores del servidor
+        setError(data.message || "Error al iniciar sesión");
+      }
+    } catch (error) {
+      console.error("Error de conexión:", error);
+      setError("Error de conexión con el servidor");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -19,6 +56,7 @@ const Register = () => {
         <h2>¡Regístrate!</h2>
         <p className="subtitle">Crea una cuenta para continuar</p>
         <form onSubmit={handleRegister}>
+          {error && <div className="error-message">{error}</div>}
           <div className="input-group">
             <label>Nombre</label>
             <input
@@ -49,7 +87,9 @@ const Register = () => {
               required
             />
           </div>
-          <button type="submit" className="register-btn">Registrarse</button>
+          <button type="submit" className="register-btn" disabled={loading}>
+            {loading ? "Registrando..." : "Registrarse"}
+          </button>
         </form>
         <p className="login-text">
           ¿Ya tienes una cuenta?{" "}

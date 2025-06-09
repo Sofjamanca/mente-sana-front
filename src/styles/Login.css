@@ -115,3 +115,45 @@ html, body {
     color: #444;
   }
   
+  /* Mensaje de error */
+  .error-message {
+    background-color: #ff4757;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-align: center;
+    animation: shake 0.5s ease-in-out;
+  }
+  
+  @keyframes shake {
+    0%, 20%, 40%, 60%, 80% {
+      transform: translateX(-2px);
+    }
+    10%, 30%, 50%, 70%, 90% {
+      transform: translateX(2px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  /* Estados deshabilitados */
+  .input-group input:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  .login-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  .login-btn:disabled:hover {
+    background-color: #ccc;
+  }
+  
