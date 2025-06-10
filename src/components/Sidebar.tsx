@@ -11,12 +11,14 @@ import {
   LogoutOutlined,
   HeartOutlined,
   MenuFoldOutlined,
-  MenuUnfoldOutlined
+  MenuUnfoldOutlined,
+  ExclamationCircleOutlined
 } from "@ant-design/icons";
-import { Menu, Switch, Button, Typography, Space } from "antd";
+import { Menu, Switch, Button, Typography, Space, Modal } from "antd";
 import type { MenuProps, MenuTheme } from "antd";
 
 const { Title, Text } = Typography;
+const { confirm } = Modal;
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -68,10 +70,10 @@ interface SidebarProps {
   theme: "dark" | "light"; 
   onThemeChange?: (theme: "dark" | "light") => void;
   onMenuClick?: (key: string) => void;
+  onLogout?: () => void;
 }
 
-
-const ImprovedSidebar: React.FC<SidebarProps> = ({ onThemeChange, onMenuClick }) => {
+const ImprovedSidebar: React.FC<SidebarProps> = ({ onThemeChange, onMenuClick, onLogout }) => {
   const [theme, setTheme] = useState<MenuTheme>("light");
   const [current, setCurrent] = useState("profile");
   const [collapsed, setCollapsed] = useState(false);
@@ -113,8 +115,58 @@ useEffect(() => {
   applyThemeToBody(savedTheme);
 }, []);
 
+  const handleLogout = () => {
+    confirm({
+      title: '¿Estás seguro de que quieres cerrar sesión?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Perderás cualquier cambio no guardado.',
+      okText: 'Sí, cerrar sesión',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      centered: true,
+      onOk() {
+        try {
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('userToken');
+          localStorage.removeItem('userId');
+          localStorage.removeItem('userEmail');
+          localStorage.removeItem('userData');
+          // Mantener el tema guardado
+          // localStorage.removeItem('theme');
+
+          sessionStorage.clear();
+          
+          if (onLogout) {
+            onLogout();
+          } else {
+            // Redirección por defecto a la página de login hasta que tengamos landing
+            window.location.href = '/login';
+          }
+          
+          console.log('Sesión cerrada exitosamente');
+        } catch (error) {
+          console.error('Error al cerrar sesión:', error);
+          Modal.error({
+            title: 'Error',
+            content: 'Hubo un problema al cerrar la sesión. Por favor, intenta nuevamente.',
+          });
+        }
+      },
+      onCancel() {
+        console.log('Logout cancelado');
+      },
+    });
+  };
+
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("Navegando a:", e.key);
+    
+    // Manejar cerrar sesión de manera especial
+    if (e.key === 'logout') {
+      handleLogout();
+      return;
+    }
+    
     setCurrent(e.key);
     onMenuClick?.(e.key);
   };
