@@ -4,6 +4,7 @@ import {
   UserOutlined,
   FileTextOutlined,
   InfoCircleOutlined,
+  HomeOutlined
 } from "@ant-design/icons";
 import { Menu, Switch } from "antd";
 import type { MenuProps, MenuTheme } from "antd";
@@ -11,6 +12,11 @@ import type { MenuProps, MenuTheme } from "antd";
 type MenuItem = Required<MenuProps>["items"][number];
 
 const items: MenuItem[] = [
+  {
+    key: "/",
+    label: "Inicio",
+    icon: <HomeOutlined />
+  },
   {
     key: "profile",
     label: "Mi Perfil",
@@ -22,7 +28,7 @@ const items: MenuItem[] = [
     ],
   },
   {
-    key: "events",
+    key: "/events",
     label: "Eventos",
     icon: <AppstoreOutlined />,
     children: [
@@ -31,12 +37,12 @@ const items: MenuItem[] = [
     ],
   },
   {
-    key: "dailySummary",
+    key: "/daily-summary",
     label: "Resumen Diario",
     icon: <FileTextOutlined />,
   },
   {
-    key: "about",
+    key: "/about-us",
     label: "Acerca de",
     icon: <InfoCircleOutlined />,
   },

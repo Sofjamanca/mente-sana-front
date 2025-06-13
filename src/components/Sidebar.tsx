@@ -7,74 +7,85 @@ import {
   MoonOutlined,
   SunOutlined,
   EditOutlined,
-  SettingOutlined,
   LogoutOutlined,
   HeartOutlined,
   MenuFoldOutlined,
-  MenuUnfoldOutlined
+  MenuUnfoldOutlined,
+  ExclamationCircleOutlined,
+  HomeOutlined,
+  PhoneOutlined
 } from "@ant-design/icons";
-import { Menu, Switch, Button, Typography, Space } from "antd";
+import { Menu, Switch, Button, Typography, Space, Modal } from "antd";
 import type { MenuProps, MenuTheme } from "antd";
+import { useNavigate } from "react-router-dom"; 
 
 const { Title, Text } = Typography;
+const { confirm } = Modal;
 
 type MenuItem = Required<MenuProps>["items"][number];
 
 const items: MenuItem[] = [
   {
-    key: "profile",
-    label: "Mi Perfil",
-    icon: <UserOutlined />,
-    children: [
-      { 
-        key: "edit", 
-        label: "Editar Perfil", 
-        icon: <EditOutlined />,
-      },
-      { 
-        key: "settings", 
-        label: "Configuraciones", 
-        icon: <SettingOutlined />,
-      },
-      { 
-        key: "logout", 
-        label: "Cerrar Sesión", 
-        icon: <LogoutOutlined style={{ color: '#ff4d4f' }} />,
-      },
-    ],
+      key: "/home",
+      label: "Inicio",
+      icon: <HomeOutlined />
   },
   {
-    key: "events",
+  key: "profile",
+  label: "Mi Perfil",
+  icon: <UserOutlined />,
+  children: [
+    {
+      key: "edit",
+      label: "Editar Perfil",
+      icon: <EditOutlined />,
+    },
+    {
+      key: "logout",
+      label: "Cerrar Sesión",
+      icon: <LogoutOutlined style={{ color: '#ff4d4f' }} />,
+    },
+  ],
+  },
+{
+  key: "events",
     label: "Eventos",
-    icon: <CalendarOutlined />,
-    children: [
-      { key: "upcoming", label: "Próximos Eventos" },
-      { key: "past", label: "Eventos Pasados" },
-    ],
+      icon: <CalendarOutlined />,
+        children: [
+          { key: "upcoming", label: "Próximos Eventos" },
+          { key: "past", label: "Eventos Pasados" },
+        ],
   },
-  {
-    key: "dailySummary",
+{
+  key: "/daily-summary",
     label: "Resumen Diario",
-    icon: <FileTextOutlined />,
+      icon: <FileTextOutlined />,
   },
   {
-    key: "about",
-    label: "Acerca de",
-    icon: <InfoCircleOutlined />,
+  key: "/contacts",
+    label: "Contactos",
+      icon: <PhoneOutlined />,
   },
+  {
+  key: "/about-us",
+    label: "Acerca de",
+      icon: <InfoCircleOutlined />,
+  }
 ];
 
 interface SidebarProps {
-  theme: "dark" | "light"; 
+  theme: "dark" | "light";
   onThemeChange?: (theme: "dark" | "light") => void;
   onMenuClick?: (key: string) => void;
+  onLogout?: () => void;
 }
 
-
-const ImprovedSidebar: React.FC<SidebarProps> = ({ onThemeChange, onMenuClick }) => {
+const ImprovedSidebar: React.FC<SidebarProps> = ({ onThemeChange, onMenuClick, onLogout }) => {
   const [theme, setTheme] = useState<MenuTheme>("light");
   const [current, setCurrent] = useState("profile");
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
+
 
   const isDark = theme === "dark";
 
@@ -86,9 +97,9 @@ const ImprovedSidebar: React.FC<SidebarProps> = ({ onThemeChange, onMenuClick })
   const changeTheme = (value: boolean) => {
     const newTheme = value ? "dark" : "light";
     setTheme(newTheme);
-    
+
     applyThemeToBody(newTheme);
-    
+
     try {
       localStorage.setItem("theme", newTheme);
     } catch (error) {
@@ -97,25 +108,77 @@ const ImprovedSidebar: React.FC<SidebarProps> = ({ onThemeChange, onMenuClick })
     onThemeChange?.(newTheme);
   };
 
-useEffect(() => {
-  let savedTheme: MenuTheme = "light"; 
+  useEffect(() => {
+    let savedTheme: MenuTheme = "light";
 
-  try {
-    const storedTheme = localStorage.getItem("theme");
-    if (storedTheme === "dark" || storedTheme === "light") {
-      savedTheme = storedTheme;
+    try {
+      const storedTheme = localStorage.getItem("theme");
+      if (storedTheme === "dark" || storedTheme === "light") {
+        savedTheme = storedTheme;
+      }
+    } catch (error) {
+      console.warn("No se pudo acceder a localStorage:", error);
     }
-  } catch (error) {
-    console.warn("No se pudo acceder a localStorage:", error);
-  }
 
-  setTheme(savedTheme);
-  applyThemeToBody(savedTheme);
-}, []);
+    setTheme(savedTheme);
+    applyThemeToBody(savedTheme);
+  }, []);
+
+
+  const handleLogout = () => {
+    confirm({
+      title: '¿Estás seguro de que quieres cerrar sesión?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Perderás cualquier cambio no guardado.',
+      okText: 'Sí, cerrar sesión',
+      okType: 'danger',
+      cancelText: 'Cancelar',
+      centered: true,
+      onOk() {
+        try {
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('userToken');
+          localStorage.removeItem('userId');
+          localStorage.removeItem('userEmail');
+          localStorage.removeItem('userData');
+          // Mantener el tema guardado
+          // localStorage.removeItem('theme');
+
+          sessionStorage.clear();
+
+          if (onLogout) {
+            onLogout();
+          } else {
+            // Redirección por defecto a la página de login hasta que tengamos landing
+            window.location.href = '/login';
+          }
+
+          console.log('Sesión cerrada exitosamente');
+        } catch (error) {
+          console.error('Error al cerrar sesión:', error);
+          Modal.error({
+            title: 'Error',
+            content: 'Hubo un problema al cerrar la sesión. Por favor, intenta nuevamente.',
+          });
+        }
+      },
+      onCancel() {
+        console.log('Logout cancelado');
+      },
+    });
+  };
 
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("Navegando a:", e.key);
+
+    // Manejar cerrar sesión de manera especial
+    if (e.key === 'logout') {
+      handleLogout();
+      return;
+    }
+
     setCurrent(e.key);
+    navigate(e.key);
     onMenuClick?.(e.key);
   };
 
@@ -124,8 +187,8 @@ useEffect(() => {
   };
 
   return (
-    <div 
-      style={{ 
+    <div
+      style={{
         minWidth: collapsed ? 80 : 320,
         width: collapsed ? 80 : '20vw',
         maxWidth: collapsed ? 80 : 400,
@@ -138,29 +201,29 @@ useEffect(() => {
         boxShadow: '2px 0 8px rgba(0,0,0,0.1)'
       }}
     >
-      <div style={{ 
+      <div style={{
         padding: collapsed ? '16px 12px' : '20px 24px',
         borderBottom: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`,
         background: isDark ? '#002140' : '#fafafa',
         transition: 'all 0.2s'
       }}>
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
           justifyContent: collapsed ? 'center' : 'space-between',
           marginBottom: collapsed ? '0' : '16px'
         }}>
           {!collapsed && (
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <HeartOutlined style={{ 
-                fontSize: '24px', 
-                color: '#ff4d4f', 
-                marginRight: '12px' 
+              <HeartOutlined style={{
+                fontSize: '24px',
+                color: '#ff4d4f',
+                marginRight: '12px'
               }} />
-              <Title 
-                level={4} 
-                style={{ 
-                  color: isDark ? '#fff' : '#000', 
+              <Title
+                level={4}
+                style={{
+                  color: isDark ? '#fff' : '#000',
                   margin: '0',
                   fontWeight: 600
                 }}
@@ -170,21 +233,21 @@ useEffect(() => {
             </div>
           )}
           {collapsed && (
-            <HeartOutlined style={{ 
-              fontSize: '24px', 
+            <HeartOutlined style={{
+              fontSize: '24px',
               color: '#ff4d4f'
             }} />
           )}
         </div>
-        
+
         {!collapsed && (
           <Space direction="vertical" size="small" style={{ width: '100%' }}>
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'space-between' 
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
             }}>
-              <Text style={{ 
+              <Text style={{
                 color: isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)',
                 fontSize: '12px'
               }}>
@@ -196,12 +259,12 @@ useEffect(() => {
                 onChange={changeTheme}
                 checkedChildren={<MoonOutlined style={{ fontSize: '10px' }} />}
                 unCheckedChildren={<SunOutlined style={{ fontSize: '10px' }} />}
-                style={{ 
+                style={{
                   backgroundColor: isDark ? '#1890ff' : '#52c41a'
                 }}
               />
             </div>
-            <Text style={{ 
+            <Text style={{
               color: isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)',
               fontSize: '11px',
               fontStyle: 'italic'
@@ -244,11 +307,11 @@ useEffect(() => {
       />
 
       {/* Menú */}
-      <div style={{ flex: 1}}>
+      <div style={{ flex: 1 }}>
         <Menu
           theme={theme}
           onClick={onClick}
-          style={{ 
+          style={{
             border: 'none',
             fontSize: '14px',
             background: 'transparent'
@@ -263,13 +326,13 @@ useEffect(() => {
 
       {/* Footer del Sidebar */}
       {!collapsed && (
-        <div style={{ 
+        <div style={{
           padding: '16px 24px',
           borderTop: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`,
           background: isDark ? '#000c17' : '#f9f9f9'
         }}>
-          <div style={{ 
-            display: 'flex', 
+          <div style={{
+            display: 'flex',
             alignItems: 'center',
             marginBottom: '8px'
           }}>
@@ -286,7 +349,7 @@ useEffect(() => {
               <UserOutlined style={{ color: '#fff', fontSize: '16px' }} />
             </div>
             <div>
-              <Text strong style={{ 
+              <Text strong style={{
                 color: isDark ? '#fff' : '#000',
                 fontSize: '14px',
                 display: 'block',
@@ -294,7 +357,7 @@ useEffect(() => {
               }}>
                 Usuario
               </Text>
-              <Text style={{ 
+              <Text style={{
                 color: isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)',
                 fontSize: '12px'
               }}>

@@ -1,6 +1,7 @@
 import "../styles/Home.css";
 import BannerImage from "../assets/banner.png";
 import { useNavigate } from "react-router-dom";
+import { MoodChart } from "../components/MoodChart";
 
 interface HomeProps {
   theme: "dark" | "light";
@@ -47,6 +48,7 @@ const Home = ({ theme }: HomeProps) => {
             <p>Realiza un seguimiento constante de tu progreso.</p>
           </div>
         </div>
+              <MoodChart />
       </section>
     </div>
   );

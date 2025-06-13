@@ -1,0 +1,294 @@
+.mood-chart-main {
+          width: 100%;
+          max-width: 64rem;
+          margin: 0 auto;
+          padding: 1.5rem;
+          background: linear-gradient(135deg, #f8fafc, #e0f2fe);
+          border-radius: 1.5rem;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .mood-header {
+          text-align: center;
+          margin-bottom: 2rem;
+        }
+
+        .mood-title {
+          font-size: 1.875rem;
+          font-weight: 700;
+          color: #1f2937;
+          margin-bottom: 0.5rem;
+        }
+
+        .mood-average {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.75rem;
+        }
+
+        .mood-average-emoji {
+          font-size: 2.5rem;
+        }
+
+        .mood-average-desc {
+          font-size: 1.125rem;
+          font-weight: 600;
+          color: #374151;
+          margin: 0;
+        }
+
+        .mood-average-period {
+          font-size: 0.875rem;
+          color: #6b7280;
+          margin: 0;
+        }
+
+        .mood-circle-container {
+          position: relative;
+          display: flex;
+          justify-content: center;
+          margin-bottom: 2rem;
+        }
+
+        .mood-circle {
+          position: relative;
+          width: 20rem;
+          height: 20rem;
+        }
+
+        .mood-day-item {
+          position: absolute;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .mood-day-item:hover {
+          transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(1.25);
+        }
+
+        .mood-day-circle {
+          width: 4rem;
+          height: 4rem;
+          border-radius: 50%;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 4px solid white;
+          transition: all 0.3s ease;
+        }
+
+        .mood-day-circle:hover {
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .mood-day-emoji {
+          font-size: 1.5rem;
+        }
+
+        .mood-day-info {
+          text-align: center;
+          margin-top: 0.5rem;
+        }
+
+        .mood-day-name {
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: #4b5563;
+          margin: 0;
+        }
+
+        .mood-day-date {
+          font-size: 0.75rem;
+          color: #6b7280;
+          margin: 0;
+        }
+
+        .mood-center {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          width: 5rem;
+          height: 5rem;
+          background: white;
+          border-radius: 50%;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 4px solid #f3f4f6;
+        }
+
+        .mood-center-text {
+          text-align: center;
+        }
+
+        .mood-center-text p {
+          font-size: 0.75rem;
+          font-weight: 700;
+          color: #4b5563;
+          margin: 0;
+        }
+
+        .mood-progress-section {
+          margin-bottom: 1.5rem;
+        }
+
+        .mood-progress-labels {
+          display: flex;
+          justify-content: space-between;
+          font-size: 0.75rem;
+          color: #6b7280;
+          margin-bottom: 0.5rem;
+        }
+
+        .mood-progress-bar {
+          height: 0.75rem;
+          background-color: #e5e7eb;
+          border-radius: 9999px;
+          overflow: hidden;
+        }
+
+        .mood-progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #f87171, #facc15, #60a5fa);
+          border-radius: 9999px;
+          transition: all 1s ease;
+        }
+
+        .mood-progress-text {
+          text-align: center;
+          font-size: 0.875rem;
+          color: #4b5563;
+          margin-top: 0.5rem;
+        }
+
+        .mood-cards-grid {
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          gap: 0.5rem;
+        }
+
+        .mood-card {
+          padding: 0.75rem;
+          border-radius: 0.75rem;
+          text-align: center;
+          transition: all 0.3s ease;
+          cursor: pointer;
+        }
+
+        .mood-card:hover {
+          transform: scale(1.05);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .mood-card-selected {
+          box-shadow: 0 0 0 4px #60a5fa, 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .mood-card-emoji {
+          font-size: 1.5rem;
+          margin-bottom: 0.25rem;
+        }
+
+        .mood-card-day {
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: #374151;
+          margin: 0;
+        }
+
+        .mood-card-date {
+          font-size: 0.75rem;
+          color: #6b7280;
+          margin: 0;
+        }
+
+        .mood-modal-overlay {
+          position: fixed;
+          inset: 0;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 50;
+        }
+
+        .mood-modal {
+          background: white;
+          padding: 1.5rem;
+          border-radius: 1rem;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+          max-width: 24rem;
+          width: 100%;
+          margin: 0 1rem;
+        }
+
+        .mood-modal-content {
+          text-align: center;
+        }
+
+        .mood-modal-emoji {
+          font-size: 3.75rem;
+          margin-bottom: 1rem;
+        }
+
+        .mood-modal-title {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: #1f2937;
+          margin-bottom: 0.5rem;
+        }
+
+        .mood-modal-description {
+          font-size: 1.125rem;
+          color: #4b5563;
+          margin-bottom: 1rem;
+        }
+
+        .mood-modal-bar {
+          width: 100%;
+          height: 0.5rem;
+          border-radius: 9999px;
+          margin-bottom: 1rem;
+        }
+
+        .mood-modal-button {
+          padding: 0.5rem 1.5rem;
+          background-color: #3b82f6;
+          color: white;
+          border-radius: 9999px;
+          border: none;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+
+        .mood-modal-button:hover {
+          background-color: #2563eb;
+        }
+
+        @media (max-width: 768px) {
+          .mood-chart-main {
+            padding: 1rem;
+          }
+          
+          .mood-circle {
+            width: 16rem;
+            height: 16rem;
+          }
+          
+          .mood-cards-grid {
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.25rem;
+          }
+          
+          .mood-card {
+            padding: 0.5rem;
+          }
+          
+          .mood-card-emoji {
+            font-size: 1.25rem;
+          }
+        }

@@ -5,11 +5,46 @@ import "../styles/Login.css";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Iniciar sesión con:", email, password);
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Guardar el token en localStorage
+        localStorage.setItem("token", data.token);
+        console.log("Login exitoso, token:", data.token);
+        
+        // Redirigir al dashboard o página principal
+        navigate("/home");
+      } else {
+        // Manejar errores del servidor
+        setError(data.message || "Error al iniciar sesión");
+      }
+    } catch (error) {
+      console.error("Error de conexión:", error);
+      setError("Error de conexión con el servidor");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -18,6 +53,7 @@ const Login = () => {
         <h2>¡Bienvenido!</h2>
         <p className="subtitle">Inicia sesión para continuar</p>
         <form onSubmit={handleLogin}>
+          {error && <div className="error-message">{error}</div>}
           <div className="input-group">
             <label>Correo Electrónico</label>
             <input
@@ -26,6 +62,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
           <div className="input-group">
@@ -36,9 +73,12 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
-          <button type="submit" className="login-btn">Iniciar Sesión</button>
+          <button type="submit" className="login-btn" disabled={loading}>
+            {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
+          </button>
         </form>
         <p className="register-text">
           ¿No tienes una cuenta?{" "}
