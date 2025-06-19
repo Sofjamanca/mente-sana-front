@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   UserOutlined,
   CalendarOutlined,
-  FileTextOutlined,
+  CommentOutlined,
   InfoCircleOutlined,
   MoonOutlined,
   SunOutlined,
@@ -13,11 +13,13 @@ import {
   MenuUnfoldOutlined,
   ExclamationCircleOutlined,
   HomeOutlined,
-  PhoneOutlined
+  PhoneOutlined,
+  FileDoneOutlined, QuestionOutlined, RollbackOutlined
 } from "@ant-design/icons";
 import { Menu, Switch, Button, Typography, Space, Modal } from "antd";
 import type { MenuProps, MenuTheme } from "antd";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate, useLocation } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
 
 const { Title, Text } = Typography;
 const { confirm } = Modal;
@@ -26,50 +28,55 @@ type MenuItem = Required<MenuProps>["items"][number];
 
 const items: MenuItem[] = [
   {
-      key: "/home",
-      label: "Inicio",
-      icon: <HomeOutlined />
+    key: "/home",
+    label: "Inicio",
+    icon: <HomeOutlined />
   },
   {
-  key: "profile",
-  label: "Mi Perfil",
-  icon: <UserOutlined />,
-  children: [
-    {
-      key: "edit",
-      label: "Editar Perfil",
-      icon: <EditOutlined />,
-    },
-    {
-      key: "logout",
-      label: "Cerrar Sesión",
-      icon: <LogoutOutlined style={{ color: '#ff4d4f' }} />,
-    },
-  ],
+    key: "profile",
+    label: "Mi Perfil",
+    icon: <UserOutlined />,
+    children: [
+      {
+        key: "/profile/edit",
+        label: "Editar Perfil",
+        icon: <EditOutlined />,
+      },
+      {
+        key: "logout",
+        label: "Cerrar Sesión",
+        icon: <LogoutOutlined style={{ color: '#ff4d4f' }} />,
+      },
+    ],
   },
-{
-  key: "events",
+  {
+    key: "events",
     label: "Eventos",
-      icon: <CalendarOutlined />,
-        children: [
-          { key: "upcoming", label: "Próximos Eventos" },
-          { key: "past", label: "Eventos Pasados" },
-        ],
+    icon: <CalendarOutlined />,
+    children: [
+      { key: "upcoming", label: "Próximos Eventos", icon: <QuestionOutlined /> },
+      { key: "past", label: "Eventos Pasados", icon: <RollbackOutlined /> },
+    ],
   },
-{
-  key: "/daily-summary",
+  {
+    key: "/daily-summary",
     label: "Resumen Diario",
-      icon: <FileTextOutlined />,
+    icon: <CommentOutlined />,
   },
   {
-  key: "/contacts",
+    key: "/blogs",
+    label: "Blogs",
+    icon: <FileDoneOutlined />,
+  },
+  {
+    key: "/contacts",
     label: "Contactos",
-      icon: <PhoneOutlined />,
+    icon: <PhoneOutlined />,
   },
   {
-  key: "/about-us",
+    key: "/about-us",
     label: "Acerca de",
-      icon: <InfoCircleOutlined />,
+    icon: <InfoCircleOutlined />,
   }
 ];
 
@@ -82,10 +89,9 @@ interface SidebarProps {
 
 const ImprovedSidebar: React.FC<SidebarProps> = ({ onThemeChange, onMenuClick, onLogout }) => {
   const [theme, setTheme] = useState<MenuTheme>("light");
-  const [current, setCurrent] = useState("profile");
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
-
+const location = useLocation();
 
   const isDark = theme === "dark";
 
@@ -107,6 +113,55 @@ const ImprovedSidebar: React.FC<SidebarProps> = ({ onThemeChange, onMenuClick, o
     }
     onThemeChange?.(newTheme);
   };
+
+  const { userProfile, setUserProfile } = useUser();
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const cachedName = localStorage.getItem("userName");
+
+    const fetchUserProfile = async () => {
+      if (!token) return;
+
+      const response = await fetch("http://localhost:3000/api/auth/profile", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+      setUserProfile(data);
+      localStorage.setItem("userName", data.name); // actualiza cache
+    };
+
+    // Si hay un nombre cacheado, usalo de entrada
+    if (cachedName) {
+      setUserProfile(prev => ({ ...prev, name: cachedName }));
+    }
+
+    fetchUserProfile();
+
+    // Escuchar cambios al localStorage (evento externo entre pestañas)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'userName') {
+        setUserProfile(prev => ({ ...prev, name: e.newValue ?? '' }));
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+// función opcional para mapear rutas a keys
+const mapPathToMenuKey = (pathname: string): string => {
+  if (pathname.startsWith("/profile")) return "profile";
+  if (pathname.startsWith("/events")) return "events";
+  return pathname;
+};
+
 
   useEffect(() => {
     let savedTheme: MenuTheme = "light";
@@ -176,11 +231,9 @@ const ImprovedSidebar: React.FC<SidebarProps> = ({ onThemeChange, onMenuClick, o
       handleLogout();
       return;
     }
-
-    setCurrent(e.key);
-    navigate(e.key);
-    onMenuClick?.(e.key);
-  };
+  navigate(e.key);
+  onMenuClick?.(e.key);
+};
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
@@ -317,8 +370,7 @@ const ImprovedSidebar: React.FC<SidebarProps> = ({ onThemeChange, onMenuClick, o
             background: 'transparent'
           }}
           defaultOpenKeys={collapsed ? [] : ["profile"]}
-          selectedKeys={[current]}
-          mode="inline"
+          selectedKeys={[mapPathToMenuKey(location.pathname)]} mode="inline"
           inlineCollapsed={collapsed}
           items={items}
         />
@@ -355,7 +407,7 @@ const ImprovedSidebar: React.FC<SidebarProps> = ({ onThemeChange, onMenuClick, o
                 display: 'block',
                 lineHeight: '1.2'
               }}>
-                Usuario
+                {userProfile?.name || "Usuario"}
               </Text>
               <Text style={{
                 color: isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)',

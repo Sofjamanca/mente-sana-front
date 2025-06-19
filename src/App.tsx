@@ -8,9 +8,10 @@ import Events from "./pages/Events";
 import DailySummary from "./pages/DailySummary";
 import AboutUs from "./pages/AboutUs";
 import Footer from "./components/Footer";
+import EditProfile from "./components/EditProfile";
 import Sidebar from "./components/Sidebar";
 import Landing from "./pages/Landing";
-
+import Blogs from "./pages/Blogs";
 
 const Layout = () => {
   const location = useLocation();
@@ -22,7 +23,7 @@ const Layout = () => {
 
   useEffect(() => {
     localStorage.setItem("theme", theme);
-    document.documentElement.setAttribute("data-theme", theme); 
+    document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
   const handleThemeChange = (newTheme: "dark" | "light") => {
@@ -41,8 +42,10 @@ const Layout = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/events/:id" element={<Events />} />
             <Route path="/daily-summary" element={<DailySummary />} />
+            <Route path="/blogs" element={<Blogs />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/about-us-guest" element={<AboutUs />} />
+            <Route path="/profile/edit" element={<EditProfile />} />
             <Route path="/" element={<Landing theme={theme} />} />
           </Routes>
         </div>
