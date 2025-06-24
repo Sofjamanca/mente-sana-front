@@ -54,8 +54,8 @@ const items: MenuItem[] = [
     label: "Eventos",
     icon: <CalendarOutlined />,
     children: [
-      { key: "upcoming", label: "Próximos Eventos", icon: <QuestionOutlined /> },
-      { key: "past", label: "Eventos Pasados", icon: <RollbackOutlined /> },
+      { key: "/events/upcoming", label: "Próximos Eventos", icon: <QuestionOutlined /> },
+      { key: "/events/past", label: "Eventos Pasados", icon: <RollbackOutlined /> },
     ],
   },
   {
@@ -158,6 +158,8 @@ const location = useLocation();
 // función opcional para mapear rutas a keys
 const mapPathToMenuKey = (pathname: string): string => {
   if (pathname.startsWith("/profile")) return "profile";
+  if (pathname === "/events/upcoming") return "/events/upcoming";
+  if (pathname === "/events/past") return "/events/past";
   if (pathname.startsWith("/events")) return "events";
   return pathname;
 };
