@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/Landing.css';
 
 interface SvgIconProps {
   className?: string; 
 }
 
-const Landing = ({ theme = 'light' }) => {
+interface LandingProps {
+  theme?: string;
+}
+
+const Landing = ({ theme = 'light' }: LandingProps) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -99,7 +103,7 @@ const Landing = ({ theme = 'light' }) => {
           <FloatingHeart delay={4} size="✨" />
         </div>
         
-        <div className="landing-hero-content">
+        <div className={`landing-hero-content ${isVisible ? 'animate-in' : ''}`}>
           <h1 className={`landing-hero-title ${theme}`}>
             Tu bienestar mental es{' '}
             <span className="landing-hero-title-highlight">nuestra prioridad</span>

@@ -1,0 +1,308 @@
+.admin-panel {
+  padding: 24px;
+  min-height: calc(100vh - 60px); /* Ajustar para el footer */
+  background-color: transparent; /* Usar el fondo del tema */
+}
+
+.admin-header {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: var(--card-bg, #ffffff);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-header h2 {
+  margin-bottom: 8px;
+  color: var(--primary-color, #1890ff);
+}
+
+.admin-header p {
+  margin: 0;
+  color: var(--text-color, #666);
+  font-size: 16px;
+}
+
+/* Personalización de tabs */
+.admin-panel .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid #d9d9d9;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  margin-right: 8px;
+}
+
+.admin-panel .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active {
+  background: var(--primary-color, #1890ff);
+  color: white;
+  border-color: var(--primary-color, #1890ff);
+}
+
+.admin-panel .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active .anticon {
+  color: white;
+}
+
+/* Personalización de cards */
+.admin-panel .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+}
+
+.admin-panel .ant-card-head {
+  background: var(--card-header-bg, #fafafa);
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.admin-panel .ant-card-head-title {
+  color: var(--primary-color, #1890ff);
+  font-weight: 600;
+}
+
+/* Estadísticas */
+.admin-panel .ant-statistic {
+  text-align: center;
+}
+
+.admin-panel .ant-statistic-title {
+  color: var(--text-color, #666);
+  font-size: 14px;
+}
+
+.admin-panel .ant-statistic-content {
+  color: var(--primary-color, #1890ff);
+}
+
+/* Formularios */
+.admin-panel .ant-form-item-label > label {
+  color: var(--text-color, #333);
+  font-weight: 500;
+}
+
+.admin-panel .ant-input,
+.admin-panel .ant-input:focus,
+.admin-panel .ant-picker {
+  border-radius: 6px;
+}
+
+.admin-panel .ant-btn {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.admin-panel .ant-btn-primary {
+  background: var(--primary-color, #1890ff);
+  border-color: var(--primary-color, #1890ff);
+}
+
+.admin-panel .ant-btn-primary:hover {
+  background: var(--primary-hover-color, #40a9ff);
+  border-color: var(--primary-hover-color, #40a9ff);
+}
+
+/* Tablas */
+.admin-panel .ant-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.admin-panel .ant-table-thead > tr > th {
+  background: var(--table-header-bg, #fafafa);
+  color: var(--text-color, #333);
+  font-weight: 600;
+}
+
+.admin-panel .ant-table-tbody > tr:hover > td {
+  background: var(--table-hover-bg, #f5f5f5);
+}
+
+/* Botones de acción */
+.admin-panel .ant-btn-sm {
+  height: 28px;
+  padding: 0 12px;
+  font-size: 12px;
+}
+
+/* Upload */
+.admin-panel .ant-upload {
+  width: 100%;
+}
+
+.admin-panel .ant-upload-list {
+  margin-top: 8px;
+}
+
+/* Grid responsive para estadísticas */
+.admin-panel .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.admin-panel .secondary-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* Cards con altura igual */
+.admin-panel .equal-height-cards .ant-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-panel .equal-height-cards .ant-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .admin-panel .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .admin-panel .secondary-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-panel {
+    padding: 16px;
+  }
+  
+  .admin-header {
+    padding: 16px;
+    text-align: center;
+  }
+  
+  .admin-header h2 {
+    font-size: 20px;
+  }
+  
+  .admin-panel .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .admin-panel .secondary-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .admin-panel .ant-col {
+    margin-bottom: 16px;
+  }
+  
+  .admin-panel .ant-tabs-tab {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  
+  .admin-panel .ant-statistic-title {
+    font-size: 12px;
+  }
+  
+  .admin-panel .ant-statistic-content {
+    font-size: 20px;
+  }
+  
+  .admin-panel .ant-card-head-title {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-panel {
+    padding: 12px;
+  }
+  
+  .admin-header {
+    padding: 12px;
+  }
+  
+  .admin-panel .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .admin-panel .ant-tabs-nav {
+    margin-bottom: 16px;
+  }
+  
+  .admin-panel .ant-tabs-tab {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+  
+  .admin-panel .ant-card {
+    margin-bottom: 12px;
+  }
+  
+  .admin-panel .ant-table {
+    font-size: 12px;
+  }
+  
+  .admin-panel .ant-btn-sm {
+    height: 24px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+}
+
+/* Tema oscuro */
+[data-theme="dark"] .admin-panel {
+  background-color: #141414;
+}
+
+[data-theme="dark"] .admin-header {
+  background: #1f1f1f;
+  border: 1px solid #303030;
+}
+
+[data-theme="dark"] .admin-header h2 {
+  color: #1890ff;
+}
+
+[data-theme="dark"] .admin-header p {
+  color: #888;
+}
+
+[data-theme="dark"] .admin-panel .ant-card {
+  background: #1f1f1f;
+  border: 1px solid #303030;
+}
+
+[data-theme="dark"] .admin-panel .ant-card-head {
+  background: #262626;
+  border-bottom: 1px solid #303030;
+}
+
+[data-theme="dark"] .admin-panel .ant-form-item-label > label {
+  color: #fff;
+}
+
+[data-theme="dark"] .admin-panel .ant-table {
+  background: #1f1f1f;
+}
+
+[data-theme="dark"] .admin-panel .ant-table-thead > tr > th {
+  background: #262626;
+  color: #fff;
+  border-bottom: 1px solid #303030;
+}
+
+[data-theme="dark"] .admin-panel .ant-table-tbody > tr > td {
+  background: #1f1f1f;
+  border-bottom: 1px solid #303030;
+  color: #fff;
+}
+
+[data-theme="dark"] .admin-panel .ant-table-tbody > tr:hover > td {
+  background: #262626;
+} 

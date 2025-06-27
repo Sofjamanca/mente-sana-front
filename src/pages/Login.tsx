@@ -31,10 +31,23 @@ const Login = () => {
       if (response.ok) {
         // Guardar el token en localStorage
         localStorage.setItem("token", data.token);
-        console.log("Login exitoso, token:", data.token);
         
-        // Redirigir al dashboard o página principal
-        navigate("/home");
+        // Guardar información del usuario incluyendo el rol
+        if (data.user) {
+          localStorage.setItem("userName", data.user.name || data.name || "Usuario");
+          localStorage.setItem("userRole", data.user.role || data.role || "user");
+        }
+        
+        console.log("Login exitoso, token:", data.token);
+        console.log("Rol del usuario:", data.user?.role || data.role);
+        
+        // Redirigir según el rol del usuario
+        const userRole = data.user?.role || data.role;
+        if (userRole?.toLowerCase() === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/home");
+        }
       } else {
         // Manejar errores del servidor
         setError(data.message || "Error al iniciar sesión");

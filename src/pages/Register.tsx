@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Select } from "antd";
 import "../styles/Registrer.css";
 
 // Interfaces para los datos de la API Georef
@@ -34,6 +35,7 @@ const Register = () => {
 
   const navigate = useNavigate();
 
+ 
   // Cargar provincias
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -57,6 +59,7 @@ const Register = () => {
 
     fetchProvinces();
   }, []);
+
 
   // Cargar localidades cuando se selecciona una provincia
   useEffect(() => {
@@ -183,96 +186,110 @@ const Register = () => {
         <form onSubmit={handleRegister}>
           {error && <div className="error-message">{error}</div>}
           
-          <div className="input-group">
-            <label>Nombre</label>
-            <input
-              type="text"
-              placeholder="Tu nombre"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
+          <div className="form-columns">
+            <div className="form-column-left">
+              <div className="input-group">
+                <label>Nombre</label>
+                <input
+                  type="text"
+                  placeholder="Tu nombre"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
 
-          <div className="input-group">
-            <label>Correo Electrónico</label>
-            <input
-              type="email"
-              placeholder="ejemplo@correo.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
+              <div className="input-group">
+                <label>Correo Electrónico</label>
+                <input
+                  type="email"
+                  placeholder="ejemplo@correo.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
 
-          <div className="input-group">
-            <label>Contraseña</label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+              <div className="input-group">
+                <label>Contraseña</label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+            
+            </div>
 
-          <div className="input-group">
-            <label>Fecha de Nacimiento</label>
-            <input
-              type="date"
-              value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
-              max={new Date().toISOString().split('T')[0]} // No permitir fechas futuras
-              required
-            />
-          </div>
+            <div className="form-column-right">
+              <div className="input-group">
+                <label>Fecha de Nacimiento</label>
+                <input
+                  type="date"
+                  value={birthDate}
+                  onChange={(e) => setBirthDate(e.target.value)}
+                  max={new Date().toISOString().split('T')[0]} // No permitir fechas futuras
+                  required
+                />
+              </div>
 
-          <div className="input-group">
-            <label>Provincia</label>
-            <select
-              value={selectedProvince}
-              onChange={(e) => setSelectedProvince(e.target.value)}
-              required
-              disabled={loadingProvinces}
-            >
-              <option value="">
-                {loadingProvinces ? "Cargando provincias..." : "Selecciona una provincia"}
-              </option>
-              {provinces.map((province) => (
-                <option key={province.id} value={province.id}>
-                  {province.nombre}
-                </option>
-              ))}
-            </select>
-          </div>
+              <div className="input-group">
+                <label>Provincia</label>
+                <Select
+                  showSearch
+                  value={selectedProvince || undefined}
+                  onChange={(value) => setSelectedProvince(value || "")}
+                  placeholder={loadingProvinces ? "Cargando provincias..." : "Selecciona o busca una provincia"}
+                  disabled={loadingProvinces}
+                  loading={loadingProvinces}
+                  filterOption={(input, option) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                  }
+                  style={{ width: '100%', height: '45px' }}
+                  size="large"
+                  allowClear
+                  options={provinces.map((province) => ({
+                    value: province.id,
+                    label: province.nombre,
+                  }))}
+                />
+              </div>
 
-          <div className="input-group">
-            <label>Localidad</label>
-            <select
-              value={selectedLocality}
-              onChange={(e) => setSelectedLocality(e.target.value)}
-              required
-              disabled={loadingLocalities || !selectedProvince}
-            >
-              <option value="">
-                {loadingLocalities 
-                  ? "Cargando localidades..." 
-                  : !selectedProvince 
-                    ? "Primero selecciona una provincia"
-                    : "Selecciona una localidad"
-                }
-              </option>
-              {localities.map((locality) => (
-                <option key={locality.id} value={locality.id}>
-                  {locality.nombre}
-                </option>
-              ))}
-            </select>
-          </div>
+              <div className="input-group">
+                <label>Localidad</label>
+                <Select
+                  showSearch
+                  value={selectedLocality || undefined}
+                  onChange={(value) => setSelectedLocality(value || "")}
+                  placeholder={
+                    loadingLocalities 
+                      ? "Cargando localidades..." 
+                      : !selectedProvince 
+                        ? "Primero selecciona una provincia"
+                        : "Selecciona o busca una localidad"
+                  }
+                  disabled={loadingLocalities || !selectedProvince}
+                  loading={loadingLocalities}
+                  filterOption={(input, option) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                  }
+                  style={{ width: '100%', height: '45px' }}
+                  size="large"
+                  allowClear
+                  options={localities.map((locality) => ({
+                    value: locality.id,
+                    label: locality.nombre,
+                  }))}
+                />
+              </div>
 
-          <button type="submit" className="register-btn" disabled={loading}>
-            {loading ? "Registrando..." : "Registrarse"}
-          </button>
+              <button type="submit" className="register-btn" disabled={loading}>
+                {loading ? "Registrando..." : "Registrarse"}
+              </button>
+            </div>
+          </div>
         </form>
         <p className="login-text">
           ¿Ya tienes una cuenta?{" "}

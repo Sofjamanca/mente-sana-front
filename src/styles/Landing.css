@@ -133,6 +133,7 @@ body {
   transition: all 0.4s ease;
   position: relative;
   overflow-x: hidden;
+  border-radius: 20px;
 }
 
 .landing-container.light {
@@ -284,7 +285,7 @@ body {
 
 .landing-hero-title {
   font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 900;
+  font-weight: 700;
   line-height: 1.1;
   margin-bottom: 1.5rem;
   background: linear-gradient(135deg, var(--primary-rose) 0%, var(--accent-purple) 100%);
@@ -305,7 +306,7 @@ body {
 .landing-hero-title-highlight {
   position: relative;
   display: inline-block;
-  color:var(--gray-900)
+  color:var(--gray-900);
 }
 
 .landing-hero-title-highlight::after {
@@ -323,7 +324,7 @@ body {
 .landing-hero-subtitle {
   font-size: clamp(1.1rem, 2vw, 1.5rem);
   margin-bottom: 3rem;
-  max-width: 42rem;
+  max-width: 62rem;
   margin-left: auto;
   margin-right: auto;
   color: var(--gray-600);

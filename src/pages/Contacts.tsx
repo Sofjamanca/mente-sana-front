@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import '../styles/Contact.css';
 
 const Contacts = () => {
-  const [activeCard, setActiveCard] = useState(null);
-  const [isVisible, setIsVisible] = useState({});
+  const [activeCard, setActiveCard] = useState<number | null>(null);
+  const [isVisible, setIsVisible] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -110,15 +110,15 @@ const onlineResources = [
 ];
 
 
-  const handleCardClick = (contactId) => {
+  const handleCardClick = (contactId: number) => {
     setActiveCard(activeCard === contactId ? null : contactId);
   };
 
-  const handleCall = (phone) => {
+  const handleCall = (phone: string) => {
     window.open(`tel:${phone}`, '_self');
   };
 
- const handleWebsite = (website) => {
+ const handleWebsite = (website: string) => {
   window.open(website, '_blank');
 };
 
@@ -132,7 +132,7 @@ const onlineResources = [
         <div className="shape shape-4"></div>
       </div>
 
-      <section className="contacts-header" id="header" data-animate>
+      <section className={`contacts-header ${isVisible.header ? 'animate-in' : ''}`} id="header" data-animate>
         <h1>Recursos de Ayuda</h1>
         <p>Siempre hay alguien dispuesto a escucharte. No estás solo/a.</p>
         <div className="header-alert">

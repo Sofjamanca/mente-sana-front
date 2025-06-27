@@ -61,7 +61,6 @@ body {
   color: var(--text-light);
 }
 
-/* Asegurar que el contenido no quede cubierto por la Sidebar */
 .main-content {
   /* margin-left: 250px; */
   /* padding: 20px; */

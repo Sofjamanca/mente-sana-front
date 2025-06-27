@@ -2,6 +2,10 @@ import "../styles/Home.css";
 import BannerImage from "../assets/banner.png";
 import { useNavigate } from "react-router-dom";
 import { MoodChart } from "../components/MoodChart";
+import { useUser } from "../contexts/UserContext";
+import { Button } from "antd";
+import { SettingOutlined } from "@ant-design/icons";
+
 
 interface HomeProps {
   theme: "dark" | "light";
@@ -9,13 +13,51 @@ interface HomeProps {
 
 const Home = ({ theme }: HomeProps) => {
   const navigate = useNavigate();
+  const { isAdmin, userProfile } = useUser();
 
   const handleClick = () => {
     navigate("/daily-summary");
   };
 
+  const handleAdminClick = () => {
+    navigate("/admin");
+  };
+
   return (
     <div className={`home ${theme}`}>
+      {/* Sección especial para admin */}
+      {isAdmin && (
+        <section className="admin-access" style={{
+          backgroundColor: theme === 'dark' ? '#1f1f1f' : '#f0f9ff',
+          border: `1px solid ${theme === 'dark' ? '#303030' : '#e0f2fe'}`,
+          borderRadius: '8px',
+          padding: '16px',
+          marginBottom: '24px',
+          textAlign: 'center'
+        }}>
+          <h3 style={{
+            color: theme === 'dark' ? '#1890ff' : '#0066cc',
+            marginBottom: '8px'
+          }}>
+            ¡Hola {userProfile?.name}! 👋
+          </h3>
+          <p style={{
+            color: theme === 'dark' ? '#fff' : '#333',
+            marginBottom: '16px'
+          }}>
+            Tienes acceso al panel de administración
+          </p>
+          <Button 
+            type="primary" 
+            icon={<SettingOutlined />}
+            onClick={handleAdminClick}
+            size="large"
+          >
+            Ir al Panel de Administración
+          </Button>
+        </section>
+      )}
+
       <section className="hero">
         <div className="hero-content">
           <h1>Tu bienestar mental, nuestra prioridad</h1>
