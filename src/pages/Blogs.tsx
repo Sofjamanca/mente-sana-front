@@ -1,4 +1,3 @@
-import React from 'react';
 import ArticleCard from "../components/ArticleCard";
 import "../styles/Blogs.css"
 import type { Article }  from "../components/ArticleCard";

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/AboutUs.css';
 
 const AboutUs = () => {
-  const [isVisible, setIsVisible] = useState({});
+  const [isVisible, setIsVisible] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -35,7 +35,7 @@ const AboutUs = () => {
       </div>
 
       <section 
-        className="about-header"
+        className={`about-header ${isVisible.header ? 'animate-in' : ''}`}
         id="header"
         data-animate
       >

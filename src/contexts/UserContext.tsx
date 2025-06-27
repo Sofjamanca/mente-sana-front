@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   useContext,
   useState,
@@ -10,11 +10,13 @@ import type { Dispatch, SetStateAction } from "react";
 type UserProfile = {
   name: string;
   email?: string;
+  role?: string;
 };
 
 type UserContextType = {
   userProfile: UserProfile | null;
   setUserProfile: Dispatch<SetStateAction<UserProfile | null>>;
+  isAdmin: boolean;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -22,12 +24,18 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
+  const isAdmin = userProfile?.role?.toLowerCase() === 'admin';
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     const cachedName = localStorage.getItem("userName");
+    const cachedRole = localStorage.getItem("userRole");
 
     if (cachedName) {
-      setUserProfile({ name: cachedName });
+      setUserProfile({ 
+        name: cachedName, 
+        role: cachedRole || undefined 
+      });
     }
 
     const fetchUserProfile = async () => {
@@ -52,6 +60,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         if (data?.name) {
           localStorage.setItem("userName", data.name);
         }
+        if (data?.role) {
+          localStorage.setItem("userRole", data.role);
+        }
       } catch (error) {
         console.error("Error al obtener perfil:", error);
       }
@@ -61,7 +72,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ userProfile, setUserProfile }}>
+    <UserContext.Provider value={{ userProfile, setUserProfile, isAdmin }}>
       {children}
     </UserContext.Provider>
   );

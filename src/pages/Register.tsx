@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Select } from "antd";
 import "../styles/Registrer.css";
 
 // Interfaces para los datos de la API Georef
@@ -236,45 +237,52 @@ const Register = () => {
 
               <div className="input-group">
                 <label>Provincia</label>
-                <select
-                  value={selectedProvince}
-                  onChange={(e) => setSelectedProvince(e.target.value)}
-                  required
+                <Select
+                  showSearch
+                  value={selectedProvince || undefined}
+                  onChange={(value) => setSelectedProvince(value || "")}
+                  placeholder={loadingProvinces ? "Cargando provincias..." : "Selecciona o busca una provincia"}
                   disabled={loadingProvinces}
-                >
-                  <option value="">
-                    {loadingProvinces ? "Cargando provincias..." : "Selecciona una provincia"}
-                  </option>
-                  {provinces.map((province) => (
-                    <option key={province.id} value={province.id}>
-                      {province.nombre}
-                    </option>
-                  ))}
-                </select>
+                  loading={loadingProvinces}
+                  filterOption={(input, option) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                  }
+                  style={{ width: '100%', height: '45px' }}
+                  size="large"
+                  allowClear
+                  options={provinces.map((province) => ({
+                    value: province.id,
+                    label: province.nombre,
+                  }))}
+                />
               </div>
 
               <div className="input-group">
                 <label>Localidad</label>
-                <select
-                  value={selectedLocality}
-                  onChange={(e) => setSelectedLocality(e.target.value)}
-                  required
-                  disabled={loadingLocalities || !selectedProvince}
-                >
-                  <option value="">
-                    {loadingLocalities 
+                <Select
+                  showSearch
+                  value={selectedLocality || undefined}
+                  onChange={(value) => setSelectedLocality(value || "")}
+                  placeholder={
+                    loadingLocalities 
                       ? "Cargando localidades..." 
                       : !selectedProvince 
                         ? "Primero selecciona una provincia"
-                        : "Selecciona una localidad"
-                    }
-                  </option>
-                  {localities.map((locality) => (
-                    <option key={locality.id} value={locality.id}>
-                      {locality.nombre}
-                    </option>
-                  ))}
-                </select>
+                        : "Selecciona o busca una localidad"
+                  }
+                  disabled={loadingLocalities || !selectedProvince}
+                  loading={loadingLocalities}
+                  filterOption={(input, option) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                  }
+                  style={{ width: '100%', height: '45px' }}
+                  size="large"
+                  allowClear
+                  options={localities.map((locality) => ({
+                    value: locality.id,
+                    label: locality.nombre,
+                  }))}
+                />
               </div>
 
               <button type="submit" className="register-btn" disabled={loading}>

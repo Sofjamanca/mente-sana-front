@@ -14,7 +14,10 @@ import {
   ExclamationCircleOutlined,
   HomeOutlined,
   PhoneOutlined,
-  FileDoneOutlined, QuestionOutlined, RollbackOutlined
+  FileDoneOutlined, 
+  QuestionOutlined, 
+  RollbackOutlined,
+  SettingOutlined
 } from "@ant-design/icons";
 import { Menu, Switch, Button, Typography, Space, Modal } from "antd";
 import type { MenuProps, MenuTheme } from "antd";
@@ -91,7 +94,7 @@ const ImprovedSidebar: React.FC<SidebarProps> = ({ onThemeChange, onMenuClick, o
   const [theme, setTheme] = useState<MenuTheme>("light");
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
-const location = useLocation();
+  const location = useLocation();
 
   const isDark = theme === "dark";
 
@@ -114,7 +117,40 @@ const location = useLocation();
     onThemeChange?.(newTheme);
   };
 
-  const { userProfile, setUserProfile } = useUser();
+  const { userProfile, setUserProfile, isAdmin } = useUser();
+
+  // Generar items del menú dinámicamente basado en el rol
+  const getMenuItems = (): MenuItem[] => {
+    const baseItems = [...items];
+    
+    // Si es admin, agregar opción de panel de administración con submenú
+    if (isAdmin) {
+      baseItems.splice(1, 0, {
+        key: "admin",
+        label: "Panel de Admin",
+        icon: <SettingOutlined />,
+        children: [
+          {
+            key: "/admin",
+            label: "Resumen",
+            icon: <InfoCircleOutlined />,
+          },
+          {
+            key: "/admin/blogs",
+            label: "Gestión de Blogs",
+            icon: <FileDoneOutlined />,
+          },
+          {
+            key: "/admin/events",
+            label: "Gestión de Eventos",
+            icon: <CalendarOutlined />,
+          },
+        ],
+      });
+    }
+    
+    return baseItems;
+  };
 
 
   useEffect(() => {
@@ -161,6 +197,7 @@ const mapPathToMenuKey = (pathname: string): string => {
   if (pathname === "/events/upcoming") return "/events/upcoming";
   if (pathname === "/events/past") return "/events/past";
   if (pathname.startsWith("/events")) return "events";
+  if (pathname.startsWith("/admin")) return "admin";
   return pathname;
 };
 
@@ -374,7 +411,7 @@ const mapPathToMenuKey = (pathname: string): string => {
           defaultOpenKeys={collapsed ? [] : ["profile"]}
           selectedKeys={[mapPathToMenuKey(location.pathname)]} mode="inline"
           inlineCollapsed={collapsed}
-          items={items}
+          items={getMenuItems()}
         />
       </div>
 
