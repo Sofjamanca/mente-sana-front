@@ -17,6 +17,7 @@ import Sidebar from "./components/Sidebar";
 import Landing from "./pages/Landing";
 import Blogs from "./pages/Blogs";
 import ProtectedRoute from "./components/ProtectedRoute";
+import BlogPost from "./pages/BlogPost";
 
 const Layout = () => {
   const location = useLocation();
@@ -80,6 +81,14 @@ const Layout = () => {
               element={
                 <ProtectedRoute>
                   <Blogs />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/blogs/:id" 
+              element={
+                <ProtectedRoute>
+                  <BlogPost />
                 </ProtectedRoute>
               } 
             />

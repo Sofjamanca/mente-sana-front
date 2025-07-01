@@ -3,7 +3,7 @@ import { Heart, Share2, User, Clock, Eye } from 'lucide-react';
 import '../styles/ArticleCard.css';
 
 export interface Article {
-  id: number;
+  id: string;
   title: string;
   description?: string;
   category?: string;
