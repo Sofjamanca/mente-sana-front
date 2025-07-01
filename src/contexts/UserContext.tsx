@@ -42,7 +42,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       if (!token) return;
 
       try {
-        const response = await fetch("http://localhost:3000/api/auth/profile", {
+        const response = await fetch("/api/auth/profile", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,

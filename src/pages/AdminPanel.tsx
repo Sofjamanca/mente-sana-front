@@ -70,9 +70,9 @@ const AdminPanel: React.FC = () => {
 
       // Hacer todas las llamadas en paralelo
       const [generalResponse, dailyResponse, usersResponse] = await Promise.all([
-        fetch('http://localhost:3000/api/stats/general', { headers }),
-        fetch('http://localhost:3000/api/stats/daily-entries/daily', { headers }),
-        fetch('http://localhost:3000/api/stats/users/by-role', { headers })
+        fetch('/api/stats/general', { headers }),
+        fetch('/api/stats/daily-entries/daily', { headers }),
+        fetch('/api/stats/users/by-role', { headers })
       ]);
 
       if (generalResponse.ok) {

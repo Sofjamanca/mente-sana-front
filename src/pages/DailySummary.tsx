@@ -31,7 +31,7 @@ const DailySummary = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/daily-entries', {
+      const response = await fetch('/api/daily-entries', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

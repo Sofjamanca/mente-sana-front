@@ -78,7 +78,7 @@ export const MoodChart = () => {
 
             try {
                 const response = await fetch(
-                    `http://localhost:3000/api/daily-entries?startDate=${format(startDate)}&endDate=${format(endDate)}`,
+                    `/api/daily-entries?startDate=${format(startDate)}&endDate=${format(endDate)}`,
                     {
                         headers: {
                             "Content-Type": "application/json",

@@ -142,7 +142,7 @@ const Register = () => {
       const provinceName = provinces.find(p => p.id === selectedProvince)?.nombre || "";
       const localityName = localities.find(l => l.id === selectedLocality)?.nombre || "";
 
-      const response = await fetch("http://localhost:3000/api/auth/register", {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

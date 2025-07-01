@@ -66,7 +66,7 @@ const BlogsManagement: React.FC = () => {
 
   const fetchBlogs = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/blog', {
+      const response = await fetch('/api/blog', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -89,7 +89,7 @@ const BlogsManagement: React.FC = () => {
   const handleCreateBlog = async (values: BlogFormValues) => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/blog', {
+      const response = await fetch('/api/blog', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ const BlogsManagement: React.FC = () => {
       cancelText: 'Cancelar',
       onOk: async () => {
         try {
-          const response = await fetch(`http://localhost:3000/api/blog/${id}`, {
+          const response = await fetch(`/api/blog/${id}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('token')}`,

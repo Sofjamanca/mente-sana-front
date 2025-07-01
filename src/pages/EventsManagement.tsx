@@ -69,7 +69,7 @@ const EventsManagement: React.FC = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/events', {
+      const response = await fetch('/api/events', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -92,7 +92,7 @@ const EventsManagement: React.FC = () => {
   const handleCreateEvent = async (values: EventFormValues) => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/events', {
+      const response = await fetch('/api/events', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ const EventsManagement: React.FC = () => {
       cancelText: 'Cancelar',
       onOk: async () => {
         try {
-          const response = await fetch(`http://localhost:3000/api/events/${id}`, {
+          const response = await fetch(`/api/events/${id}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('token')}`,
