@@ -162,7 +162,6 @@ const Register = () => {
       if (response.ok) {
         // Guardar el token en localStorage
         localStorage.setItem("token", data.token);
-        console.log("Registro exitoso, token:", data.token);
         
         // Redirigir al dashboard o página principal
         navigate("/home");

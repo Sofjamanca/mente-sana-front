@@ -3,10 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import { 
   Card, 
-  Form, 
-  Input, 
   Button, 
-  Upload, 
   message, 
   Table, 
   Space, 
@@ -16,13 +13,11 @@ import {
 import { 
   PlusOutlined, 
   EditOutlined, 
-  DeleteOutlined, 
-  UploadOutlined,
+  DeleteOutlined,
   FileTextOutlined
 } from '@ant-design/icons';
 import '../styles/AdminPanel.css';
 
-const { TextArea } = Input;
 const { Title } = Typography;
 const { confirm } = Modal;
 
@@ -30,23 +25,19 @@ interface Blog {
   id: string;
   title: string;
   content: string;
-  author: string;
+  author: {
+    id: string;
+    name: string;
+    email: string;
+  };
   createdAt: string;
   image?: string;
 }
 
-interface BlogFormValues {
-  title: string;
-  content: string;
-  image?: File;
-}
-
 const BlogsManagement: React.FC = () => {
-  const { userProfile, isAdmin } = useUser();
+  const { isAdmin } = useUser();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [blogForm] = Form.useForm();
 
   // Verificar permisos de admin
   useEffect(() => {
@@ -75,53 +66,20 @@ const BlogsManagement: React.FC = () => {
         const data = await response.json();
         setBlogs(data);
       } else if (response.status === 403) {
-        message.error('No tienes permisos para ver los blogs');
+        message.error('No tienes permisos para ver los posts');
         navigate('/home');
       } else {
-        message.error('Error al cargar blogs');
+        message.error('Error al cargar posts');
       }
     } catch (error) {
-      console.error('Error al cargar blogs:', error);
-      message.error('Error de conexión al cargar blogs');
-    }
-  };
-
-  const handleCreateBlog = async (values: BlogFormValues) => {
-    setLoading(true);
-    try {
-      const response = await fetch('/api/blog', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({
-          ...values,
-          author: userProfile?.name || 'Admin'
-        }),
-      });
-
-      if (response.ok) {
-        message.success('Blog creado exitosamente');
-        blogForm.resetFields();
-        fetchBlogs();
-      } else if (response.status === 403) {
-        message.error('No tienes permisos para crear blogs');
-        navigate('/home');
-      } else {
-        message.error('Error al crear el blog');
-      }
-    } catch (error) {
-      console.error('Error al crear blog:', error);
-      message.error('Error de conexión');
-    } finally {
-      setLoading(false);
+      console.error('Error al cargar posts:', error);
+      message.error('Error de conexión al cargar posts');
     }
   };
 
   const handleDeleteBlog = (id: string) => {
     confirm({
-      title: '¿Estás seguro de eliminar este blog?',
+      title: '¿Estás seguro de eliminar este post?',
       content: 'Esta acción no se puede deshacer',
       okText: 'Sí, eliminar',
       okType: 'danger',
@@ -136,13 +94,13 @@ const BlogsManagement: React.FC = () => {
           });
 
           if (response.ok) {
-            message.success('Blog eliminado exitosamente');
+            message.success('Post eliminado exitosamente');
             fetchBlogs();
           } else {
-            message.error('Error al eliminar el blog');
+            message.error('Error al eliminar el post');
           }
         } catch (error) {
-          console.error('Error al eliminar blog:', error);
+          console.error('Error al eliminar post:', error);
           message.error('Error de conexión');
         }
       },
@@ -154,27 +112,32 @@ const BlogsManagement: React.FC = () => {
       title: 'Título',
       dataIndex: 'title',
       key: 'title',
+      width: '30%',
     },
     {
       title: 'Autor',
       dataIndex: 'author',
       key: 'author',
+      width: '20%',
+      render: (author: { name: string }) => author?.name || 'Sin autor',
     },
     {
       title: 'Fecha',
       dataIndex: 'createdAt',
       key: 'createdAt',
+      width: '20%',
       render: (date: string) => new Date(date).toLocaleDateString('es-ES'),
     },
     {
       title: 'Acciones',
       key: 'actions',
+      width: '30%',
       render: (_: unknown, record: Blog) => (
         <Space>
           <Button 
             icon={<EditOutlined />} 
             size="small"
-            onClick={() => {/* TODO: Implementar edición */}}
+            onClick={() => navigate(`/admin/blogs/edit/${record.id}`)}
           >
             Editar
           </Button>
@@ -200,53 +163,33 @@ const BlogsManagement: React.FC = () => {
       <div className="admin-header">
         <Title level={2}>
           <FileTextOutlined style={{ marginRight: '12px', color: '#1890ff' }} />
-          Gestión de Blogs
+          Gestión de Posts
         </Title>
-        <p>Administra todos los blogs de la plataforma</p>
+        <p>Administra todos los posts de la plataforma</p>
+        
+        <Button 
+          type="primary" 
+          icon={<PlusOutlined />} 
+          size="large"
+          onClick={() => navigate('/admin/blogs/create')}
+          style={{ marginTop: 16 }}
+        >
+          Crear Nuevo Post
+        </Button>
       </div>
 
-      <Card title="Crear Nuevo Blog" style={{ marginBottom: 16 }}>
-        <Form form={blogForm} onFinish={handleCreateBlog} layout="vertical">
-          <Form.Item
-            name="title"
-            label="Título"
-            rules={[{ required: true, message: 'El título es requerido' }]}
-          >
-            <Input placeholder="Título del blog" />
-          </Form.Item>
-
-          <Form.Item
-            name="content"
-            label="Contenido"
-            rules={[{ required: true, message: 'El contenido es requerido' }]}
-          >
-            <TextArea rows={6} placeholder="Contenido del blog" />
-          </Form.Item>
-
-          <Form.Item name="image" label="Imagen">
-            <Upload
-              name="image"
-              listType="picture"
-              beforeUpload={() => false}
-            >
-              <Button icon={<UploadOutlined />}>Subir Imagen</Button>
-            </Upload>
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading}>
-              <PlusOutlined /> Crear Blog
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
-
-      <Card title="Blogs Existentes">
+      <Card title="Posts Existentes" style={{ marginTop: 24 }}>
         <Table 
           columns={blogColumns} 
           dataSource={blogs} 
           rowKey="id"
-          pagination={{ pageSize: 10 }}
+          pagination={{ 
+            pageSize: 10,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total, range) => `${range[0]}-${range[1]} de ${total} posts`
+          }}
+          scroll={{ x: 800 }}
         />
       </Card>
     </div>

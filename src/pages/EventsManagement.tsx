@@ -3,27 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import { 
   Card, 
-  Form, 
-  Input, 
   Button, 
-  DatePicker, 
-  Upload, 
   message, 
   Table, 
   Space, 
   Modal,
-  Typography
+  Typography,
+  Tag
 } from 'antd';
 import { 
   PlusOutlined, 
   EditOutlined, 
-  DeleteOutlined, 
-  UploadOutlined,
+  DeleteOutlined,
   CalendarOutlined
 } from '@ant-design/icons';
 import '../styles/AdminPanel.css';
 
-const { TextArea } = Input;
 const { Title } = Typography;
 const { confirm } = Modal;
 
@@ -33,23 +28,18 @@ interface Event {
   description: string;
   date: string;
   location: string;
+  author: {
+    id: string;
+    name: string;
+    email: string;
+  };
   image?: string;
-}
-
-interface EventFormValues {
-  title: string;
-  description: string;
-  date: Date | string;
-  location: string;
-  image?: File;
 }
 
 const EventsManagement: React.FC = () => {
   const { isAdmin } = useUser();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [events, setEvents] = useState<Event[]>([]);
-  const [eventForm] = Form.useForm();
 
   // Verificar permisos de admin
   useEffect(() => {
@@ -89,36 +79,6 @@ const EventsManagement: React.FC = () => {
     }
   };
 
-  const handleCreateEvent = async (values: EventFormValues) => {
-    setLoading(true);
-    try {
-      const response = await fetch('/api/events', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify(values),
-      });
-
-      if (response.ok) {
-        message.success('Evento creado exitosamente');
-        eventForm.resetFields();
-        fetchEvents();
-      } else if (response.status === 403) {
-        message.error('No tienes permisos para crear eventos');
-        navigate('/home');
-      } else {
-        message.error('Error al crear el evento');
-      }
-    } catch (error) {
-      console.error('Error al crear evento:', error);
-      message.error('Error de conexión');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleDeleteEvent = (id: string) => {
     confirm({
       title: '¿Estás seguro de eliminar este evento?',
@@ -149,32 +109,68 @@ const EventsManagement: React.FC = () => {
     });
   };
 
+  // Función para determinar si un evento es futuro o pasado
+  const getEventStatus = (date: string) => {
+    const eventDate = new Date(date);
+    const now = new Date();
+    return eventDate > now ? 'upcoming' : 'past';
+  };
+
   const eventColumns = [
     {
       title: 'Título',
       dataIndex: 'title',
       key: 'title',
+      width: '25%',
     },
     {
       title: 'Fecha',
       dataIndex: 'date',
       key: 'date',
-      render: (date: string) => new Date(date).toLocaleDateString('es-ES'),
+      width: '20%',
+      render: (date: string) => {
+        const eventDate = new Date(date);
+        const status = getEventStatus(date);
+        return (
+          <div>
+            <div>{eventDate.toLocaleDateString('es-ES')}</div>
+            <div style={{ fontSize: '12px', color: '#666' }}>
+              {eventDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+            </div>
+            <Tag color={status === 'upcoming' ? 'green' : 'orange'} style={{ marginTop: 4 }}>
+              {status === 'upcoming' ? 'Próximo' : 'Pasado'}
+            </Tag>
+          </div>
+        );
+      },
     },
     {
       title: 'Ubicación',
       dataIndex: 'location',
       key: 'location',
+      width: '20%',
+    },
+    {
+      title: 'Autor',
+      dataIndex: 'author',
+      key: 'author',
+      width: '15%',
+      render: (author: { name: string }) => author?.name || 'Sin autor',
     },
     {
       title: 'Acciones',
       key: 'actions',
+      width: '20%',
       render: (_: unknown, record: Event) => (
         <Space>
           <Button 
             icon={<EditOutlined />} 
             size="small"
-            onClick={() => {/* TODO: Implementar edición */}}
+            onClick={() => {
+              console.log('🎯 Editing event with ID:', record.id);
+              console.log('🎯 Full event record:', record);
+              navigate(`/admin/events/edit/${record.id}`);
+            }}
           >
             Editar
           </Button>
@@ -203,66 +199,30 @@ const EventsManagement: React.FC = () => {
           Gestión de Eventos
         </Title>
         <p>Administra todos los eventos de la plataforma</p>
+        
+        <Button 
+          type="primary" 
+          icon={<PlusOutlined />} 
+          size="large"
+          onClick={() => navigate('/admin/events/create')}
+          style={{ marginTop: 16 }}
+        >
+          Crear Nuevo Evento
+        </Button>
       </div>
 
-      <Card title="Crear Nuevo Evento" style={{ marginBottom: 16 }}>
-        <Form form={eventForm} onFinish={handleCreateEvent} layout="vertical">
-          <Form.Item
-            name="title"
-            label="Título"
-            rules={[{ required: true, message: 'El título es requerido' }]}
-          >
-            <Input placeholder="Título del evento" />
-          </Form.Item>
-
-          <Form.Item
-            name="description"
-            label="Descripción"
-            rules={[{ required: true, message: 'La descripción es requerida' }]}
-          >
-            <TextArea rows={4} placeholder="Descripción del evento" />
-          </Form.Item>
-
-          <Form.Item
-            name="date"
-            label="Fecha y Hora"
-            rules={[{ required: true, message: 'La fecha es requerida' }]}
-          >
-            <DatePicker showTime placeholder="Seleccionar fecha y hora" />
-          </Form.Item>
-
-          <Form.Item
-            name="location"
-            label="Ubicación"
-            rules={[{ required: true, message: 'La ubicación es requerida' }]}
-          >
-            <Input placeholder="Ubicación del evento" />
-          </Form.Item>
-
-          <Form.Item name="image" label="Imagen">
-            <Upload
-              name="image"
-              listType="picture"
-              beforeUpload={() => false}
-            >
-              <Button icon={<UploadOutlined />}>Subir Imagen</Button>
-            </Upload>
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading}>
-              <PlusOutlined /> Crear Evento
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
-
-      <Card title="Eventos Existentes">
+      <Card title="Eventos Existentes" style={{ marginTop: 24 }}>
         <Table 
           columns={eventColumns} 
           dataSource={events} 
           rowKey="id"
-          pagination={{ pageSize: 10 }}
+          pagination={{ 
+            pageSize: 10,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total, range) => `${range[0]}-${range[1]} de ${total} eventos`
+          }}
+          scroll={{ x: 1000 }}
         />
       </Card>
     </div>

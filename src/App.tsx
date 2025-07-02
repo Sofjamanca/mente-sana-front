@@ -11,6 +11,10 @@ import AboutUs from "./pages/AboutUs";
 import AdminPanel from "./pages/AdminPanel";
 import BlogsManagement from "./pages/BlogsManagement";
 import EventsManagement from "./pages/EventsManagement";
+import CreatePost from "./pages/CreatePost";
+import EditPost from "./pages/EditPost";
+import CreateEvent from "./pages/CreateEvent";
+import EditEvent from "./pages/EditEvent";
 import Footer from "./components/Footer";
 import EditProfile from "./components/EditProfile";
 import Sidebar from "./components/Sidebar";
@@ -121,6 +125,38 @@ const Layout = () => {
               element={
                 <ProtectedRoute adminOnly={true}>
                   <EventsManagement />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/blogs/create" 
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <CreatePost />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/blogs/edit/:id" 
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <EditPost />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/events/create" 
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <CreateEvent />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/events/edit/:id" 
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <EditEvent />
                 </ProtectedRoute>
               } 
             />

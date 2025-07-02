@@ -38,9 +38,6 @@ const Login = () => {
           localStorage.setItem("userRole", data.user.role || data.role || "user");
         }
         
-        console.log("Login exitoso, token:", data.token);
-        console.log("Rol del usuario:", data.user?.role || data.role);
-        
         // Redirigir según el rol del usuario
         const userRole = data.user?.role || data.role;
         if (userRole?.toLowerCase() === "admin") {
