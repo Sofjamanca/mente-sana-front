@@ -6,14 +6,19 @@ import {
   message, 
   Statistic,
   Typography,
-  Spin
+  Spin,
+  Button,
+  Row,
+  Col
 } from 'antd';
 import { 
   FileTextOutlined,
   CalendarOutlined,
   BarChartOutlined,
   UserOutlined,
-  LineChartOutlined
+  LineChartOutlined,
+  TeamOutlined,
+  SettingOutlined
 } from '@ant-design/icons';
 import '../styles/AdminPanel.css';
 
@@ -115,6 +120,57 @@ const AdminPanel: React.FC = () => {
         </Title>
         <p>Bienvenido, {userProfile?.name}.</p>
       </div>
+
+      {/* Navegación Rápida */}
+      <Card title="Gestión Rápida" style={{ marginBottom: 24 }}>
+        <Row gutter={16}>
+          <Col span={6}>
+            <Button 
+              type="primary" 
+              icon={<FileTextOutlined />} 
+              size="large" 
+              style={{ width: '100%', height: '60px' }}
+              onClick={() => navigate('/admin/blogs')}
+            >
+              Gestionar Posts
+            </Button>
+          </Col>
+          <Col span={6}>
+            <Button 
+              type="primary" 
+              icon={<CalendarOutlined />} 
+              size="large" 
+              style={{ width: '100%', height: '60px' }}
+              onClick={() => navigate('/admin/events')}
+            >
+              Gestionar Eventos
+            </Button>
+          </Col>
+          <Col span={6}>
+            <Button 
+              type="primary" 
+              icon={<TeamOutlined />} 
+              size="large" 
+              style={{ width: '100%', height: '60px' }}
+              onClick={() => navigate('/admin/users')}
+            >
+              Gestionar Usuarios
+            </Button>
+          </Col>
+          <Col span={6}>
+            <Button 
+              type="default" 
+              icon={<SettingOutlined />} 
+              size="large" 
+              style={{ width: '100%', height: '60px' }}
+              disabled
+            >
+              Configuración
+              <div style={{ fontSize: '12px', color: '#999' }}>Próximamente</div>
+            </Button>
+          </Col>
+        </Row>
+      </Card>
 
       {statsLoading ? (
         <div style={{ textAlign: 'center', padding: '50px' }}>

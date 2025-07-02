@@ -15,6 +15,9 @@ import CreatePost from "./pages/CreatePost";
 import EditPost from "./pages/EditPost";
 import CreateEvent from "./pages/CreateEvent";
 import EditEvent from "./pages/EditEvent";
+import UsersManagement from "./pages/UsersManagement";
+import UserDetail from "./pages/UserDetail";
+import CreateUser from "./pages/CreateUser";
 import Footer from "./components/Footer";
 import EditProfile from "./components/EditProfile";
 import Sidebar from "./components/Sidebar";
@@ -157,6 +160,30 @@ const Layout = () => {
               element={
                 <ProtectedRoute adminOnly={true}>
                   <EditEvent />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/users" 
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <UsersManagement />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/users/create" 
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <CreateUser />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/users/:id" 
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <UserDetail />
                 </ProtectedRoute>
               } 
             />

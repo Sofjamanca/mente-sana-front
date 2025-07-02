@@ -145,6 +145,11 @@ const ImprovedSidebar: React.FC<SidebarProps> = ({ onThemeChange, onMenuClick, o
             label: "Gestión de Eventos",
             icon: <CalendarOutlined />,
           },
+          {
+            key: "/admin/users",
+            label: "Gestión de Usuarios",
+            icon: <UserOutlined />,
+          },
         ],
       });
     }
