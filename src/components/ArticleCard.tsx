@@ -18,21 +18,19 @@ export interface Article {
 
 interface ArticleCardProps {
   article: Article;
-  onLike?: (id: number, liked: boolean) => void;
+  onLike?: (id: string, liked: boolean) => void; // Cambiado de number a string
   onShare?: (article: Article) => void;
   onClick?: (article: Article) => void;
   className?: string;
 }
 
-
 const ArticleCard: React.FC<ArticleCardProps> = ({ article, onLike, onShare, onClick, className = "" }) => {
   const [isLiked, setIsLiked] = useState(article.isLiked || false);
-
 
   const handleLike = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setIsLiked(!isLiked);
-    onLike?.(article.id, !isLiked);
+    onLike?.(article.id, !isLiked); // Ya es string, no necesita conversión
   };
 
   const handleShare = (e: MouseEvent<HTMLButtonElement>) => {
@@ -48,9 +46,14 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, onLike, onShare, onC
     "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
   ];
 
+  // Función para convertir string a número para el índice del gradiente
+  const getGradientIndex = (str: string): number => {
+    return Math.abs(str.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % gradients.length;
+  };
+
   const gradientIndex = article.category
-    ? Math.abs(article.category.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % gradients.length
-    : article.id % gradients.length;
+    ? getGradientIndex(article.category)
+    : getGradientIndex(article.id);
 
   return (
     <div
@@ -100,10 +103,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, onLike, onShare, onC
 
         {article.description && (
           <p className="card-description">
-            {article.description.length > 60
-              ? `${article.description.slice(0, 60)}...`
-              : article.description
-            }
+            {article.description}
           </p>
         )}
 
@@ -123,7 +123,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, onLike, onShare, onC
         </div>
 
         <div className="card-footer">
-          <div className="author-info">
+          <div className="author-info-card">
             {article.authorAvatar ? (
               <img
                 src={article.authorAvatar}

@@ -34,7 +34,7 @@ const Page = () => {
         const articlesData: Article[] = data.map((post) => ({
           id: post.id,
           title: post.title,
-          description: post.content.slice(0, 100) + "...",
+          description: post.content.slice(0, 500) + "...",
           category: post.category || "General",
           author: post.author.name,
           isLiked: false,
@@ -52,7 +52,7 @@ const Page = () => {
     fetchArticles();
   }, []);
 
-  const handleLike = (id: number, liked: boolean) => {
+  const handleLike = (id: string, liked: boolean) => {
     console.log("Artículo like toggled:", id, liked);
   };
 
@@ -60,7 +60,6 @@ const Page = () => {
     console.log("Compartir artículo:", article);
   };
 
-  // Función actualizada para navegar al post individual
   const handleClick = (article: Article) => {
     navigate(`/blogs/${article.id}`);
   };
