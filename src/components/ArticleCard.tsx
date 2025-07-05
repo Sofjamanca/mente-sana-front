@@ -18,7 +18,7 @@ export interface Article {
 
 interface ArticleCardProps {
   article: Article;
-  onLike?: (id: string, liked: boolean) => void; // Cambiado de number a string
+  onLike?: (id: string, liked: boolean) => void;
   onShare?: (article: Article) => void;
   onClick?: (article: Article) => void;
   className?: string;
@@ -30,7 +30,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, onLike, onShare, onC
   const handleLike = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setIsLiked(!isLiked);
-    onLike?.(article.id, !isLiked); // Ya es string, no necesita conversión
+    onLike?.(article.id, !isLiked);
   };
 
   const handleShare = (e: MouseEvent<HTMLButtonElement>) => {
@@ -46,7 +46,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, onLike, onShare, onC
     "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
   ];
 
-  // Función para convertir string a número para el índice del gradiente
   const getGradientIndex = (str: string): number => {
     return Math.abs(str.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % gradients.length;
   };

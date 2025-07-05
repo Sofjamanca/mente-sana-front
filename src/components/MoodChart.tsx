@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "../styles/MoodChart.css";
 
 type MoodEntry = {
     date: string;
@@ -96,6 +95,17 @@ export const MoodChart = () => {
                 setData(formatted.reverse());
             } catch (error) {
                 console.error("Error al obtener los datos:", error);
+                // Datos de ejemplo para mostrar en caso de error
+                const mockData: MoodEntry[] = [
+                    { date: "2025-07-01", mood: 5 },
+                    { date: "2025-07-02", mood: 6 },
+                    { date: "2025-07-03", mood: 4 },
+                    { date: "2025-07-04", mood: 7 },
+                    { date: "2025-07-05", mood: 5 },
+                    { date: "2025-07-06", mood: 6 },
+                    { date: "2025-07-07", mood: 5 },
+                ];
+                setData(mockData);
             }
         };
 
@@ -104,127 +114,400 @@ export const MoodChart = () => {
 
     const averageMood = data.length > 0
         ? Math.round(data.reduce((sum, entry) => sum + entry.mood, 0) / data.length)
-        : 0;
+        : 5;
 
     const averageMoodData = moodMap[averageMood];
 
+    const styles = {
+        container: {
+            width: '100%',
+            padding: '0',
+            background: 'transparent',
+            borderRadius: '0',
+            boxShadow: 'none',
+        } as React.CSSProperties,
+        
+        header: {
+            textAlign: 'center' as const,
+            marginBottom: '1.5rem',
+        },
+        
+        title: {
+            fontSize: '1.25rem',
+            fontWeight: '700',
+            color: '#be185d',
+            marginBottom: '0.75rem',
+        },
+        
+        average: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.5rem',
+            marginBottom: '1rem',
+        },
+        
+        averageEmoji: {
+            fontSize: '2rem',
+        },
+        
+        averageDesc: {
+            fontSize: '1rem',
+            fontWeight: '600',
+            color: '#374151',
+            margin: '0',
+        },
+        
+        averagePeriod: {
+            fontSize: '0.75rem',
+            color: '#6b7280',
+            margin: '0',
+        },
+        
+        circleContainer: {
+            position: 'relative' as const,
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: '1.5rem',
+            minHeight: '280px',
+        },
+        
+        circle: {
+            position: 'relative' as const,
+            width: '260px',
+            height: '260px',
+        },
+        
+        dayItem: {
+            position: 'absolute' as const,
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+        },
+        
+        dayCircle: {
+            width: '3rem',
+            height: '3rem',
+            borderRadius: '50%',
+            boxShadow: '0 6px 20px rgba(0, 0, 0, 0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '3px solid white',
+            transition: 'all 0.3s ease',
+        },
+        
+        dayEmoji: {
+            fontSize: '1.2rem',
+        },
+        
+        dayInfo: {
+            textAlign: 'center' as const,
+            marginTop: '0.25rem',
+        },
+        
+        dayName: {
+            fontSize: '0.7rem',
+            fontWeight: '600',
+            color: '#4b5563',
+            margin: '0',
+        },
+        
+        dayDate: {
+            fontSize: '0.65rem',
+            color: '#6b7280',
+            margin: '0',
+        },
+        
+        center: {
+            position: 'absolute' as const,
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '4rem',
+            height: '4rem',
+            background: 'white',
+            borderRadius: '50%',
+            boxShadow: '0 6px 20px rgba(0, 0, 0, 0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '3px solid #f3f4f6',
+        },
+        
+        centerText: {
+            textAlign: 'center' as const,
+            fontSize: '0.65rem',
+            fontWeight: '700',
+            color: '#4b5563',
+            lineHeight: '1',
+        },
+        
+        progressSection: {
+            marginBottom: '1rem',
+        },
+        
+        progressLabels: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            fontSize: '0.7rem',
+            color: '#6b7280',
+            marginBottom: '0.5rem',
+        },
+        
+        progressBar: {
+            height: '0.6rem',
+            backgroundColor: '#e5e7eb',
+            borderRadius: '9999px',
+            overflow: 'hidden' as const,
+        },
+        
+        progressFill: {
+            height: '100%',
+            background: 'linear-gradient(90deg, #f87171, #facc15, #60a5fa)',
+            borderRadius: '9999px',
+            transition: 'all 1s ease',
+            width: `${(averageMood / 7) * 100}%`,
+        },
+        
+        progressText: {
+            textAlign: 'center' as const,
+            fontSize: '0.75rem',
+            color: '#4b5563',
+            marginTop: '0.5rem',
+        },
+        
+        cardsGrid: {
+            display: 'grid',
+            gridTemplateColumns: 'repeat(7, 1fr)',
+            gap: '0.25rem',
+        },
+        
+        card: {
+            padding: '0.5rem',
+            borderRadius: '0.5rem',
+            textAlign: 'center' as const,
+            transition: 'all 0.3s ease',
+            cursor: 'pointer',
+        },
+        
+        cardEmoji: {
+            fontSize: '1.1rem',
+            marginBottom: '0.25rem',
+        },
+        
+        cardDay: {
+            fontSize: '0.65rem',
+            fontWeight: '600',
+            color: '#374151',
+            margin: '0',
+        },
+        
+        cardDate: {
+            fontSize: '0.6rem',
+            color: '#6b7280',
+            margin: '0',
+        },
+        
+        modalOverlay: {
+            position: 'fixed' as const,
+            inset: '0',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 50,
+        },
+        
+        modal: {
+            background: 'white',
+            padding: '1.5rem',
+            borderRadius: '1rem',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            maxWidth: '20rem',
+            width: '100%',
+            margin: '0 1rem',
+        },
+        
+        modalContent: {
+            textAlign: 'center' as const,
+        },
+        
+        modalEmoji: {
+            fontSize: '3rem',
+            marginBottom: '1rem',
+        },
+        
+        modalTitle: {
+            fontSize: '1.25rem',
+            fontWeight: '700',
+            color: '#1f2937',
+            marginBottom: '0.5rem',
+        },
+        
+        modalDescription: {
+            fontSize: '1rem',
+            color: '#4b5563',
+            marginBottom: '1rem',
+        },
+        
+        modalBar: {
+            width: '100%',
+            height: '0.5rem',
+            borderRadius: '9999px',
+            marginBottom: '1rem',
+        },
+        
+        modalButton: {
+            padding: '0.5rem 1.5rem',
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            borderRadius: '9999px',
+            border: 'none',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s ease',
+        },
+    };
+
     return (
-        <>
-            <div className="mood-chart-main">
-                <div className="mood-header">
-                    <h2 className="mood-title">Estado de Ánimo Semanal</h2>
-                    <div className="mood-average">
-                        <div className="mood-average-emoji">{averageMoodData?.emoji}</div>
-                        <div className="mood-average-info">
-                            <p className="mood-average-desc">Promedio: {averageMoodData?.description}</p>
-                            <p className="mood-average-period">Últimos 7 días</p>
-                        </div>
+        <div style={styles.container}>
+            <div style={styles.header}>
+                <h2 style={styles.title}>Estado de Ánimo Semanal</h2>
+                <div style={styles.average}>
+                    <div style={styles.averageEmoji}>{averageMoodData?.emoji}</div>
+                    <div>
+                        <p style={styles.averageDesc}>Promedio: {averageMoodData?.description}</p>
+                        <p style={styles.averagePeriod}>Últimos 7 días</p>
                     </div>
                 </div>
+            </div>
 
-                <div className="mood-circle-container">
-                    <div className="mood-circle">
-                        {data.map((entry, index) => {
-                            const angle = (index * 360) / data.length - 90;
-                            const radius = 120;
-                            const x = Math.cos((angle * Math.PI) / 180) * radius;
-                            const y = Math.sin((angle * Math.PI) / 180) * radius;
-                            const mood = moodMap[entry.mood];
-
-                            return (
-                                <div
-                                    key={entry.date}
-                                    className="mood-day-item"
-                                    style={{
-                                        left: '50%',
-                                        top: '50%',
-                                        transform: `translate(-50%, -50%) translate(${x}px, ${y}px)`,
-                                    }}
-                                    onClick={() => setSelectedMood(entry)}
-                                >
-                                    <div
-                                        className="mood-day-circle"
-                                        style={{ background: mood.gradientColor }}
-                                    >
-                                        <span className="mood-day-emoji">{mood.emoji}</span>
-                                    </div>
-                                    <div className="mood-day-info">
-                                        <p className="mood-day-name">{getDayName(entry.date)}</p>
-                                        <p className="mood-day-date">{entry.date.split('-')[2]}</p>
-                                    </div>
-                                </div>
-                            );
-                        })}
-
-                        <div className="mood-center">
-                            <div className="mood-center-text">
-                                <p>Esta</p>
-                                <p>Semana</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="mood-progress-section">
-                    <div className="mood-progress-labels">
-                        <span>😢 Muy triste</span>
-                        <span>🥳 Increíble</span>
-                    </div>
-                    <div className="mood-progress-bar">
-                        <div
-                            className="mood-progress-fill"
-                            style={{ width: `${(averageMood / 7) * 100}%` }}
-                        />
-                    </div>
-                    <p className="mood-progress-text">
-                        Nivel promedio: {averageMood}/7
-                    </p>
-                </div>
-
-                <div className="mood-cards-grid">
-                    {data.map((entry) => {
+            <div style={styles.circleContainer}>
+                <div style={styles.circle}>
+                    {data.map((entry, index) => {
+                        const angle = (index * 360) / data.length - 90;
+                        const radius = 100;
+                        const x = Math.cos((angle * Math.PI) / 180) * radius;
+                        const y = Math.sin((angle * Math.PI) / 180) * radius;
                         const mood = moodMap[entry.mood];
+
                         return (
                             <div
                                 key={entry.date}
-                                className={`mood-card ${selectedMood?.date === entry.date ? 'mood-card-selected' : ''}`}
-                                style={{ backgroundColor: mood.color + '33' }}
+                                style={{
+                                    ...styles.dayItem,
+                                    left: '50%',
+                                    top: '50%',
+                                    transform: `translate(-50%, -50%) translate(${x}px, ${y}px)`,
+                                }}
                                 onClick={() => setSelectedMood(entry)}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(1.1)`;
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(1)`;
+                                }}
                             >
-                                <div className="mood-card-emoji">{mood.emoji}</div>
-                                <p className="mood-card-day">{getDayName(entry.date)}</p>
-                                <p className="mood-card-date">{entry.date.split('-')[2]}</p>
+                                <div
+                                    style={{
+                                        ...styles.dayCircle,
+                                        background: mood.gradientColor
+                                    }}
+                                >
+                                    <span style={styles.dayEmoji}>{mood.emoji}</span>
+                                </div>
+                                <div style={styles.dayInfo}>
+                                    <p style={styles.dayName}>{getDayName(entry.date)}</p>
+                                    <p style={styles.dayDate}>{entry.date.split('-')[2]}</p>
+                                </div>
                             </div>
                         );
                     })}
-                </div>
 
-                {selectedMood && (
-                    <div className="mood-modal-overlay" onClick={() => setSelectedMood(null)}>
-                        <div className="mood-modal" onClick={(e) => e.stopPropagation()}>
-                            <div className="mood-modal-content">
-                                <div className="mood-modal-emoji">{moodMap[selectedMood.mood].emoji}</div>
-                                <h3 className="mood-modal-title">
-                                    {getDayName(selectedMood.date)} {selectedMood.date.split('-')[2]}
-                                </h3>
-                                <p className="mood-modal-description">
-                                    {moodMap[selectedMood.mood].description}
-                                </p>
-                                <div
-                                    className="mood-modal-bar"
-                                    style={{ backgroundColor: moodMap[selectedMood.mood].color }}
-                                />
-                                <button
-                                    className="mood-modal-button"
-                                    onClick={() => setSelectedMood(null)}
-                                >
-                                    Cerrar
-                                </button>
-                            </div>
+                    <div style={styles.center}>
+                        <div style={styles.centerText}>
+                            <div>Esta</div>
+                            <div>Semana</div>
                         </div>
                     </div>
-                )}
+                </div>
             </div>
-        </>
+
+            <div style={styles.progressSection}>
+                <div style={styles.progressLabels}>
+                    <span>😢 Muy triste</span>
+                    <span>🥳 Increíble</span>
+                </div>
+                <div style={styles.progressBar}>
+                    <div style={styles.progressFill} />
+                </div>
+                <p style={styles.progressText}>
+                    Nivel promedio: {averageMood}/7
+                </p>
+            </div>
+
+            <div style={styles.cardsGrid}>
+                {data.map((entry) => {
+                    const mood = moodMap[entry.mood];
+                    const isSelected = selectedMood?.date === entry.date;
+                    return (
+                        <div
+                            key={entry.date}
+                            style={{
+                                ...styles.card,
+                                backgroundColor: mood.color + '33',
+                                boxShadow: isSelected ? '0 0 0 3px #60a5fa, 0 6px 20px rgba(0, 0, 0, 0.15)' : 'none'
+                            }}
+                            onClick={() => setSelectedMood(entry)}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'scale(1.05)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'scale(1)';
+                                e.currentTarget.style.boxShadow = isSelected ? '0 0 0 3px #60a5fa, 0 6px 20px rgba(0, 0, 0, 0.15)' : 'none';
+                            }}
+                        >
+                            <div style={styles.cardEmoji}>{mood.emoji}</div>
+                            <p style={styles.cardDay}>{getDayName(entry.date)}</p>
+                            <p style={styles.cardDate}>{entry.date.split('-')[2]}</p>
+                        </div>
+                    );
+                })}
+            </div>
+
+            {selectedMood && (
+                <div style={styles.modalOverlay} onClick={() => setSelectedMood(null)}>
+                    <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+                        <div style={styles.modalContent}>
+                            <div style={styles.modalEmoji}>{moodMap[selectedMood.mood].emoji}</div>
+                            <h3 style={styles.modalTitle}>
+                                {getDayName(selectedMood.date)} {selectedMood.date.split('-')[2]}
+                            </h3>
+                            <p style={styles.modalDescription}>
+                                {moodMap[selectedMood.mood].description}
+                            </p>
+                            <div
+                                style={{
+                                    ...styles.modalBar,
+                                    backgroundColor: moodMap[selectedMood.mood].color
+                                }}
+                            />
+                            <button
+                                style={styles.modalButton}
+                                onClick={() => setSelectedMood(null)}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#2563eb';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#3b82f6';
+                                }}
+                            >
+                                Cerrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
     );
 };

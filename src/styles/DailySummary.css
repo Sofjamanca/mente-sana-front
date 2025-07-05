@@ -2,7 +2,7 @@
 .daily-summary {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   min-height: 100vh;
-  background: linear-gradient(135deg, #d0eafc, #f1f8ff);
+  background: linear-gradient(135deg, #ffe0f0, #f1f8ff);
   display: flex;
   justify-content: center;
   align-items: center;
