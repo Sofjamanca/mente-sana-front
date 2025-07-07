@@ -167,8 +167,6 @@ const EventsManagement: React.FC = () => {
             icon={<EditOutlined />} 
             size="small"
             onClick={() => {
-              console.log('🎯 Editing event with ID:', record.id);
-              console.log('🎯 Full event record:', record);
               navigate(`/admin/events/edit/${record.id}`);
             }}
           >

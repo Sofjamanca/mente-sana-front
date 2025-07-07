@@ -74,12 +74,10 @@ const EditEvent: React.FC = () => {
   }, [isAdmin, id]);
 
   const fetchEvent = async () => {
-    console.log('🔍 Fetching event with ID:', id);
-    console.log('🔑 Token:', localStorage.getItem('token') ? 'Present' : 'Missing');
+
     
     try {
       const url = `/api/events/event/${id}`;
-      console.log('📡 Request URL:', url);
       
       const response = await fetch(url, {
         headers: {
@@ -87,12 +85,9 @@ const EditEvent: React.FC = () => {
         },
       });
       
-      console.log('📊 Response status:', response.status);
-      console.log('📊 Response statusText:', response.statusText);
       
       if (response.ok) {
         const event = await response.json();
-        console.log('✅ Event loaded successfully:', event);
         setCurrentEvent(event);
         editForm.setFieldsValue({
           title: event.title,
@@ -102,7 +97,6 @@ const EditEvent: React.FC = () => {
         });
       } else {
         const errorText = await response.text();
-        console.log('❌ Error response body:', errorText);
         
         if (response.status === 404) {
           message.error(`Evento no encontrado (ID: ${id})`);
