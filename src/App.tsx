@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { UserProvider } from "./contexts/UserContext";
+import { useEffect } from "react";
+import { UserProvider, useUser } from "./contexts/UserContext";
 import Contacts from "./pages/Contacts";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
@@ -28,23 +28,22 @@ import ProtectedRoute from "./components/ProtectedRoute";
 const Layout = () => {
   const location = useLocation();
   const hideSidebarAndFooter = ["/login", "/register", "/", "/about-us-guest"].includes(location.pathname);
-
-  const [theme, setTheme] = useState<"dark" | "light">(() => {
-    return localStorage.getItem("theme") === "light" ? "light" : "dark";
-  });
+  const { theme } = useUser();
 
   useEffect(() => {
-    localStorage.setItem("theme", theme);
+    // Limpiar localStorage antiguo si existe
+    const oldTheme = localStorage.getItem("theme");
+    if (oldTheme && !localStorage.getItem("userTheme")) {
+      localStorage.setItem("userTheme", oldTheme);
+      localStorage.removeItem("theme");
+    }
+    
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
-  const handleThemeChange = (newTheme: "dark" | "light") => {
-    setTheme(newTheme);
-  };
-
   return (
     <div className={`app-container ${theme}`}>
-      {!hideSidebarAndFooter && <Sidebar theme={theme} onThemeChange={handleThemeChange} />}
+      {!hideSidebarAndFooter && <Sidebar theme={theme} />}
       <div className={`main-content ${theme} ${hideSidebarAndFooter ? "full-width" : ""}`}>
         <div className="content">
           <Routes>
@@ -187,7 +186,7 @@ const Layout = () => {
                 </ProtectedRoute>
               } 
             />
-            <Route path="/" element={<Landing theme={theme} />} />
+            <Route path="/" element={<Landing />} />
           </Routes>
         </div>
         {!hideSidebarAndFooter && <Footer theme={theme} />}

@@ -20,7 +20,7 @@ import {
   SettingOutlined
 } from "@ant-design/icons";
 import { Menu, Switch, Button, Typography, Space, Modal } from "antd";
-import type { MenuProps, MenuTheme } from "antd";
+import type { MenuProps } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
 
@@ -90,31 +90,17 @@ interface SidebarProps {
   onLogout?: () => void;
 }
 
-const ImprovedSidebar: React.FC<SidebarProps> = ({ onThemeChange, onMenuClick, onLogout }) => {
-  const [theme, setTheme] = useState<MenuTheme>("light");
+const ImprovedSidebar: React.FC<SidebarProps> = ({ onMenuClick, onLogout }) => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme, setTheme } = useUser();
 
   const isDark = theme === "dark";
-
-  const applyThemeToBody = (newTheme: "dark" | "light") => {
-    document.body.setAttribute("data-theme", newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
-  };
 
   const changeTheme = (value: boolean) => {
     const newTheme = value ? "dark" : "light";
     setTheme(newTheme);
-
-    applyThemeToBody(newTheme);
-
-    try {
-      localStorage.setItem("theme", newTheme);
-    } catch (error) {
-      console.warn("No se pudo guardar el tema en localStorage:", error);
-    }
-    onThemeChange?.(newTheme);
   };
 
   const { userProfile, setUserProfile, isAdmin } = useUser();
@@ -207,20 +193,14 @@ const mapPathToMenuKey = (pathname: string): string => {
 };
 
 
+  // El tema ahora se maneja completamente por UserContext
   useEffect(() => {
-    let savedTheme: MenuTheme = "light";
-
-    try {
-      const storedTheme = localStorage.getItem("theme");
-      if (storedTheme === "dark" || storedTheme === "light") {
-        savedTheme = storedTheme;
-      }
-    } catch (error) {
-      console.warn("No se pudo acceder a localStorage:", error);
+    // Limpiar localStorage antiguo si existe
+    const oldTheme = localStorage.getItem("theme");
+    if (oldTheme && !localStorage.getItem("userTheme")) {
+      localStorage.setItem("userTheme", oldTheme);
+      localStorage.removeItem("theme");
     }
-
-    setTheme(savedTheme);
-    applyThemeToBody(savedTheme);
   }, []);
 
 

@@ -11,30 +11,71 @@ type UserProfile = {
   name: string;
   email?: string;
   role?: string;
+  preferences?: {
+    theme?: 'light' | 'dark';
+  };
 };
 
 type UserContextType = {
   userProfile: UserProfile | null;
   setUserProfile: Dispatch<SetStateAction<UserProfile | null>>;
   isAdmin: boolean;
+  theme: 'light' | 'dark';
+  setTheme: (theme: 'light' | 'dark') => void;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [theme, setThemeState] = useState<'light' | 'dark'>('light');
 
   const isAdmin = userProfile?.role?.toLowerCase() === 'admin';
+
+  const setTheme = (newTheme: 'light' | 'dark') => {
+    setThemeState(newTheme);
+    localStorage.setItem('userTheme', newTheme);
+    
+    // Aplicar al DOM
+    if (newTheme === 'dark') {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+
+    // Actualizar preferencias del usuario si está logueado
+    if (userProfile) {
+      setUserProfile(prev => ({
+        ...prev!,
+        preferences: {
+          ...prev?.preferences,
+          theme: newTheme
+        }
+      }));
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const cachedName = localStorage.getItem("userName");
     const cachedRole = localStorage.getItem("userRole");
+    const cachedTheme = localStorage.getItem("userTheme") as 'light' | 'dark' || 'light';
+
+    // SIEMPRE cargar tema del localStorage como base (persiste entre sesiones)
+    setThemeState(cachedTheme);
+    if (cachedTheme === 'dark') {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
 
     if (cachedName) {
       setUserProfile({ 
         name: cachedName, 
-        role: cachedRole || undefined 
+        role: cachedRole || undefined,
+        preferences: {
+          theme: cachedTheme
+        }
       });
     }
 
@@ -55,7 +96,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         }
 
         const data = await response.json();
-        setUserProfile(data);
+        
+        // MANTENER el tema actual del localStorage (continuidad de experiencia)
+        // Las preferencias del usuario se sincronizan con el tema actual
+        setUserProfile({
+          ...data,
+          preferences: {
+            ...data.preferences,
+            theme: cachedTheme  // Usar el tema que ya tenía el usuario
+          }
+        });
 
         if (data?.name) {
           localStorage.setItem("userName", data.name);
@@ -72,7 +122,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ userProfile, setUserProfile, isAdmin }}>
+    <UserContext.Provider value={{ userProfile, setUserProfile, isAdmin, theme, setTheme }}>
       {children}
     </UserContext.Provider>
   );

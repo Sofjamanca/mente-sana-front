@@ -5,7 +5,9 @@
     min-height: 100vh;
     padding: 20px;
     background: url("/public/background.png") no-repeat center center/cover; 
- }
+    border-radius: 20px;
+    margin: 2rem 0;
+  }
   
   /* Caja del formulario */
   .register-box {

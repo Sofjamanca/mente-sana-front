@@ -1,5 +1,5 @@
 import { Layout } from "antd";
-import { FacebookOutlined, TwitterOutlined, InstagramOutlined } from "@ant-design/icons";
+import { HeartIcon } from "lucide-react";
 
 const { Footer: AntFooter } = Layout;
 
@@ -10,21 +10,23 @@ interface FooterProps {
 const Footer: React.FC<FooterProps> = ({ theme }) => {
   return (
     <AntFooter className={`footer ${theme}`}>
-      <div>
-        <p>&copy; 2025 Mente Sana. Todos los derechos reservados.</p>
-        <p>Mejorando tu bienestar mental, un paso a la vez.</p>
-      </div>
-      <div className="social-icons">
-        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
-          <FacebookOutlined />
-        </a>
-        <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer">
-          <TwitterOutlined />
-        </a>
-        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
-          <InstagramOutlined />
-        </a>
-      </div>
+     <footer className={`landing-footer ${theme}`}>
+        <div className="landing-footer-content">
+          <div className="landing-footer-logo">
+            <HeartIcon className="footer-logo-icon" />
+            <span className="footer-logo-text">Mente Sana</span>
+          </div>
+          
+          <p className="landing-footer-text">
+            Diseñada especialmente para adolescentes que buscan entender y cuidar 
+            su salud mental con el apoyo de tecnología inteligente y contenido especializado.
+          </p>
+          
+          <div className="footer-copyright">
+            <p>© 2024 Mente Sana. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </footer>
     </AntFooter>
   );
 };

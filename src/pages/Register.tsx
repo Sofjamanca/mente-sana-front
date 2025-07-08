@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Select } from "antd";
 import "../styles/Registrer.css";
+import Navbar from "../components/Navbar";
 
 // Interfaces para los datos de la API Georef
 interface Province {
@@ -178,6 +179,8 @@ const Register = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <div className="register-container">
       <div className="register-box">
         <h2>¡Regístrate!</h2>
@@ -298,6 +301,7 @@ const Register = () => {
         </p>
       </div>
     </div>
+    </>
   );
 };
 

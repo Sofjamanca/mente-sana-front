@@ -11,8 +11,11 @@ html, body {
     align-items: center;
     height: 100vh;  /* Asegura que ocupe toda la pantalla */
     width: 100%;
-    background: url("/public/background.png") no-repeat center center/cover;  }
-  
+    background: url("/public/background.png") no-repeat center center/cover;
+    border-radius: 20px;
+    margin: 2rem 0;
+  }
+
   /* Caja del formulario */
   .login-box {
     background: rgb(233 30 99 / 17%);

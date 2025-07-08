@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css"; 
+import Navbar from "../components/Navbar";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,7 +14,6 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
-
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
@@ -58,6 +58,8 @@ const Login = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <div className="login-container">
       <div className="login-box">
         <h2>¡Bienvenido!</h2>
@@ -98,6 +100,7 @@ const Login = () => {
         </p>
       </div>
     </div>
+    </>
   );
 };
 
