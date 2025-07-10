@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { SparkleIcon, MindIcon, FloatingHeart } from '../icons';
-import mainIcon from '../../../assets/main-icon.png';
-import { ParticleBackground } from './ParticleBackground';
+//import mainIcon from '../../../assets/main-icon.png';
+//import { ParticleBackground } from './ParticleBackground';
 
 interface HeroSectionProps {
   theme: 'light' | 'dark';
@@ -25,6 +25,7 @@ export const HeroSection = ({ theme }: HeroSectionProps) => {
       </div>
       
       <div className={`landing-hero-content ${isVisible ? 'animate-in' : ''}`}>
+        {/* Icono principal
         <div className="hero-icon-container">
           <ParticleBackground 
             particleCount={30}
@@ -37,6 +38,7 @@ export const HeroSection = ({ theme }: HeroSectionProps) => {
             className="hero-main-icon"
           />
         </div>
+         */}
         
         <h1 className={`landing-hero-title ${theme}`}>
           Tu compañero digital <span className="landing-hero-title-highlight">para el bienestar emocional</span>
