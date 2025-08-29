@@ -24,6 +24,7 @@ import Layout from "./components/Layout";
 import Landing from "./pages/Landing";
 import Blogs from "./pages/Blogs";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 
 const AppContent = () => {
   const location = useLocation();
@@ -190,8 +191,8 @@ const AppContent = () => {
         <div className={`main-content ${theme} full-width`}>
           <div className="content">
             <Routes>
-              <Route path="/register" element={<Register />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+              <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
               <Route path="/" element={<Landing />} />
               <Route path="/about-us-guest" element={<AboutUs />} />
             </Routes>

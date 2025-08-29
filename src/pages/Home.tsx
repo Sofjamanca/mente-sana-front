@@ -20,6 +20,7 @@ import {
   ClockCircleOutlined
 } from "@ant-design/icons";
 import { useEffect, useMemo, useState } from "react";
+import Footer from "../components/Footer";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -297,7 +298,9 @@ const Home = ({ theme }: HomeProps) => {
               gap: '12px'
             }}>
               <HeartOutlined style={{ color: '#ff4d4f' }} />
-              ¡Hola, {userProfile?.name}! 👋
+             
+                ¡Hola,<span className="dashboard-title">{userProfile?.name}! 👋</span>
+              
             </Title>
             <Text style={{ 
               fontSize: '16px', 
@@ -618,6 +621,7 @@ const Home = ({ theme }: HomeProps) => {
         targetDate={selectedDate}
         existingEntry={selectedEntry}
       />
+      <Footer theme={theme} />
     </div>
   );
 };

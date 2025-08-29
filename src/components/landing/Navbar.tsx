@@ -124,21 +124,21 @@ const Navbar = ({
               className={`user-menu-trigger ${theme}`}
               onClick={toggleUserMenu}
             >
-              <span className="user-name">Hola, {userProfile.name}</span>
+              <span className="navbar-user-name">Hola, {userProfile.name}</span>
               <ChevronDown className={`user-menu-arrow ${userMenuOpen ? 'open' : ''}`} size={16} />
             </button>
             
             {userMenuOpen && (
-              <div className={`user-dropdown ${theme}`}>
+              <div className={`navbar-user-dropdown ${theme}`}>
                 <button 
-                  className={`user-dropdown-item ${theme}`}
+                  className={`navbar-user-dropdown-item ${theme}`}
                   onClick={goToPanel}
                 >
                   <Settings size={16} />
                   <span>Panel Personal</span>
                 </button>
                 <button 
-                  className={`user-dropdown-item logout ${theme}`}
+                  className={`navbar-user-dropdown-item logout ${theme}`}
                   onClick={handleLogout}
                 >
                   <LogOut size={16} />
