@@ -1,0 +1,518 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+.navbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 79px;
+  background: #FAFAFA;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 1000;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Poppins', sans-serif !important;
+  /* Asegurar que el sticky funcione correctamente */
+  position: -webkit-sticky;
+  position: sticky;
+  /* Mejorar el backdrop filter para navegadores que lo soporten */
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.navbar.dark {
+  background: rgba(31, 31, 31, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Contenido principal de la navbar */
+.navbar-content {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 24px;
+  max-width: 100%;
+}
+
+/* Controles centrales */
+.navbar-center {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex: 1;
+  justify-content: center;
+}
+
+/* Botón de toggle de sidebar */
+.sidebar-toggle {
+  color: #6b7280;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.sidebar-toggle:hover {
+  color: #374151;
+  background: rgba(107, 114, 128, 0.1);
+}
+
+.navbar.dark .sidebar-toggle {
+  color: #d1d5db;
+}
+
+.navbar.dark .sidebar-toggle:hover {
+  color: #f9fafb;
+  background: rgba(209, 213, 219, 0.1);
+}
+
+/* Toggle del tema */
+.theme-toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(107, 114, 128, 0.05);
+  border: 1px solid rgba(107, 114, 128, 0.1);
+}
+
+.navbar.dark .theme-toggle-container {
+  background: rgba(209, 213, 219, 0.05);
+  border-color: rgba(209, 213, 219, 0.1);
+}
+
+.theme-label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.navbar.dark .theme-label {
+  color: #d1d5db;
+}
+
+.theme-switch {
+  transform: scale(0.8);
+}
+
+/* Logo */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  user-select: none;
+  margin-left: 0;
+  flex-shrink: 0;
+}
+
+.navbar-logo:hover {
+  background: rgba(255, 77, 79, 0.1);
+  transform: translateY(-1px);
+}
+
+.logo-icon {
+  font-size: 24px;
+  color: #ff4d4f;
+  transition: all 0.3s ease;
+}
+
+.navbar-logo:hover .logo-icon {
+  transform: scale(1.1);
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+  font-family: 'Poppins', sans-serif !important;
+  transition: all 0.3s ease;
+}
+
+.navbar.dark .logo-text {
+  color: #ffffff;
+}
+
+/* Controles de la derecha */
+.navbar-controls {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    height: 100%;
+    padding: 0;
+    max-width: 100%;
+    flex-shrink: 0;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+}
+
+/* Botón de notificaciones */
+.navbar-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-size: 18px;
+  color: #6b7280;
+  background: transparent;
+  border: none;
+  flex-shrink: 0;
+  float: none !important;
+  clear: none !important;
+}
+
+.navbar-button:hover {
+  background: rgba(107, 114, 128, 0.1);
+  color: #374151;
+  transform: translateY(-1px);
+}
+
+.navbar.dark .navbar-button {
+  color: #d1d5db;
+}
+
+.navbar.dark .navbar-button:hover {
+  background: rgba(209, 213, 219, 0.1);
+  color: #f9fafb;
+}
+
+/* Dropdown de usuario */
+.user-dropdown {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  flex-shrink: 0;
+  float: none !important;
+  clear: none !important;
+}
+
+.user-dropdown:hover {
+  background: rgba(107, 114, 128, 0.1);
+  border-color: rgba(107, 114, 128, 0.2);
+  transform: translateY(-1px);
+}
+
+.navbar.dark .user-dropdown:hover {
+  background: rgba(209, 213, 219, 0.1);
+  border-color: rgba(209, 213, 219, 0.2);
+}
+
+.user-avatar {
+  background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(255, 77, 79, 0.3);
+  cursor: pointer;
+}
+
+.navbar.dark .user-avatar {
+  border-color: #1f2937;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  font-family: 'Poppins', sans-serif !important;
+  line-height: 1.2;
+}
+
+.navbar.dark .user-name {
+  color: #f9fafb;
+}
+
+/* Panel de notificaciones */
+.notifications-panel {
+  width: 360px;
+  max-height: 480px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.navbar.dark .notifications-panel {
+  background: #1f2937;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.notifications-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 0;
+}
+
+.notifications-header h5 {
+  color: #1f2937;
+  font-family: 'Poppins', sans-serif !important;
+  margin: 0;
+}
+
+.navbar.dark .notifications-header h5 {
+  color: #ffffff;
+}
+
+.notifications-list {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 0 8px 16px;
+}
+
+.notifications-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.notifications-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 2px;
+}
+
+.notifications-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.notifications-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Elementos de notificación */
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 16px;
+  margin: 4px 0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  position: relative;
+}
+
+.notification-item:hover {
+  background: rgba(107, 114, 128, 0.05);
+  border-color: rgba(107, 114, 128, 0.1);
+}
+
+.notification-item.unread {
+  background: rgba(24, 144, 255, 0.05);
+  border-color: rgba(24, 144, 255, 0.1);
+}
+
+.notification-item.unread:hover {
+  background: rgba(24, 144, 255, 0.1);
+}
+
+.navbar.dark .notification-item:hover {
+  background: rgba(209, 213, 219, 0.1);
+}
+
+.navbar.dark .notification-item.unread {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.notification-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 4px;
+  font-family: 'Poppins', sans-serif !important;
+  line-height: 1.3;
+}
+
+.navbar.dark .notification-title {
+  color: #ffffff;
+}
+
+.notification-message {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 6px;
+  font-family: 'Poppins', sans-serif !important;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.navbar.dark .notification-message {
+  color: #d1d5db;
+}
+
+.notification-time {
+  font-size: 12px;
+  color: #9ca3af;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.navbar.dark .notification-time {
+  color: #9ca3af;
+}
+
+.notification-dot {
+  width: 8px;
+  height: 8px;
+  background: #1890ff;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 8px;
+  margin-left: 12px;
+}
+
+/* Loading container */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+}
+
+/* Estados responsivos */
+/* La navbar mantiene left: 0 en desktop; padding lateral uniforme provisto por .navbar-content */
+
+.navbar.mobile {
+  left: 0;
+  padding: 0;
+}
+
+/* Mejorar el comportamiento sticky */
+.navbar {
+  /* Asegurar que el sticky funcione en todos los navegadores */
+  position: -webkit-sticky;
+  position: sticky;
+  /* Mantener el navbar siempre visible */
+  will-change: transform;
+  /* Mejorar el rendimiento del backdrop filter */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+.navbar.mobile .navbar-content {
+  padding: 0;
+}
+
+.navbar.mobile .logo-text {
+  display: none;
+}
+
+.navbar.mobile .user-info {
+  display: none;
+}
+
+.navbar.mobile .navbar-controls {
+  gap: 8px;
+}
+
+.navbar.mobile .notifications-panel {
+  width: 320px;
+}
+
+/* Badge personalizado */
+.ant-badge-count {
+  background: #ff4d4f;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(255, 77, 79, 0.3);
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: 600;
+}
+
+.navbar.dark .ant-badge-count {
+  border-color: #1f2937;
+}
+
+/* Dropdown */
+.ant-dropdown {
+  z-index: 1050;
+}
+
+/* Forzar que los dropdowns de Ant Design estén en línea */
+.navbar-controls .ant-dropdown {
+  display: flex !important;
+  float: none !important;
+  clear: none !important;
+}
+
+.navbar-controls .ant-dropdown-trigger {
+  display: flex !important;
+  float: none !important;
+  clear: none !important;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notifications-panel {
+  animation: fadeIn 0.3s ease;
+}
+
+/* Estados de hover mejorados */
+.navbar-button:active {
+  transform: translateY(0);
+}
+
+.user-dropdown:active {
+  transform: translateY(0);
+}
+
+.navbar-logo:active {
+  transform: translateY(0);
+}
+
+/* Asegurar fuente en todos los elementos */
+.navbar * {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* Forzar layout horizontal para los controles de la derecha */
+.navbar-controls > * {
+  display: flex !important;
+  float: none !important;
+  clear: none !important;
+}
+
+/* Asegurar que los botones y dropdowns estén en línea */
+.navbar-controls .ant-btn,
+.navbar-controls .ant-dropdown,
+.navbar-controls .user-dropdown {
+  display: flex !important;
+  float: none !important;
+  clear: none !important;
+}

@@ -4,27 +4,26 @@ import {
   CalendarOutlined,
   CommentOutlined,
   InfoCircleOutlined,
-  MoonOutlined,
-  SunOutlined,
   EditOutlined,
   LogoutOutlined,
-  HeartOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   ExclamationCircleOutlined,
   HomeOutlined,
   PhoneOutlined,
   FileDoneOutlined, 
   QuestionOutlined, 
   RollbackOutlined,
-  SettingOutlined
+  SettingOutlined,
+  CloseOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined
 } from "@ant-design/icons";
-import { Menu, Switch, Button, Typography, Space, Modal } from "antd";
+import { Menu, Button, Typography, Modal } from "antd";
 import type { MenuProps } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
+import "../styles/Sidebar.css";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 const { confirm } = Modal;
 
 type MenuItem = Required<MenuProps>["items"][number];
@@ -35,23 +34,7 @@ const items: MenuItem[] = [
     label: "Inicio",
     icon: <HomeOutlined />
   },
-  {
-    key: "profile",
-    label: "Mi Perfil",
-    icon: <UserOutlined />,
-    children: [
-      {
-        key: "/profile/edit",
-        label: "Editar Perfil",
-        icon: <EditOutlined />,
-      },
-      {
-        key: "logout",
-        label: "Cerrar Sesión",
-        icon: <LogoutOutlined style={{ color: '#ff4d4f' }} />,
-      },
-    ],
-  },
+ 
   {
     key: "events",
     label: "Eventos",
@@ -80,6 +63,23 @@ const items: MenuItem[] = [
     key: "/about-us",
     label: "Acerca de",
     icon: <InfoCircleOutlined />,
+  },
+  {
+    key: "profile",
+    label: "Mi Perfil",
+    icon: <UserOutlined />,
+    children: [
+      {
+        key: "/profile/edit",
+        label: "Editar Perfil",
+        icon: <EditOutlined />,
+      },
+      {
+        key: "logout",
+        label: "Cerrar Sesión",
+        icon: <LogoutOutlined style={{ color: '#ff4d4f' }} />,
+      },
+    ],
   }
 ];
 
@@ -88,20 +88,32 @@ interface SidebarProps {
   onThemeChange?: (theme: "dark" | "light") => void;
   onMenuClick?: (key: string) => void;
   onLogout?: () => void;
+  isMobile?: boolean;
+  isOpen?: boolean;
+  onClose?: () => void;
+  onCollapseChange?: (collapsed: boolean) => void;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
-const ImprovedSidebar: React.FC<SidebarProps> = ({ onMenuClick, onLogout }) => {
-  const [collapsed, setCollapsed] = useState(false);
+const ImprovedSidebar: React.FC<SidebarProps> = ({ 
+  onMenuClick, 
+  onLogout, 
+  isMobile = false, 
+  isOpen = false, 
+  onClose,
+  onCollapseChange,
+  collapsed = false,
+  onToggleCollapse
+}) => {
+  const [isClosing, setIsClosing] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { theme, setTheme } = useUser();
+  const { theme } = useUser();
 
   const isDark = theme === "dark";
 
-  const changeTheme = (value: boolean) => {
-    const newTheme = value ? "dark" : "light";
-    setTheme(newTheme);
-  };
+
 
   const { userProfile, setUserProfile, isAdmin } = useUser();
 
@@ -143,7 +155,6 @@ const ImprovedSidebar: React.FC<SidebarProps> = ({ onMenuClick, onLogout }) => {
     return baseItems;
   };
 
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     const cachedName = localStorage.getItem("userName");
@@ -180,18 +191,17 @@ const ImprovedSidebar: React.FC<SidebarProps> = ({ onMenuClick, onLogout }) => {
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
+  }, [setUserProfile]);
 
-// función opcional para mapear rutas a keys
-const mapPathToMenuKey = (pathname: string): string => {
-  if (pathname.startsWith("/profile")) return "profile";
-  if (pathname === "/events/upcoming") return "/events/upcoming";
-  if (pathname === "/events/past") return "/events/past";
-  if (pathname.startsWith("/events")) return "events";
-  if (pathname.startsWith("/admin")) return "admin";
-  return pathname;
-};
-
+  // función opcional para mapear rutas a keys
+  const mapPathToMenuKey = (pathname: string): string => {
+    if (pathname.startsWith("/profile")) return "profile";
+    if (pathname === "/events/upcoming") return "/events/upcoming";
+    if (pathname === "/events/past") return "/events/past";
+    if (pathname.startsWith("/events")) return "events";
+    if (pathname.startsWith("/admin")) return "admin";
+    return pathname;
+  };
 
   // El tema ahora se maneja completamente por UserContext
   useEffect(() => {
@@ -203,6 +213,10 @@ const mapPathToMenuKey = (pathname: string): string => {
     }
   }, []);
 
+  // Notificar cambios en el estado colapsado
+  useEffect(() => {
+    onCollapseChange?.(collapsed);
+  }, [collapsed, onCollapseChange]);
 
   const handleLogout = () => {
     confirm({
@@ -255,195 +269,104 @@ const mapPathToMenuKey = (pathname: string): string => {
       handleLogout();
       return;
     }
-  navigate(e.key);
-  onMenuClick?.(e.key);
-};
 
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
+    // En móvil, cerrar la sidebar después de navegar
+    if (isMobile && onClose) {
+      onClose();
+    }
+
+    navigate(e.key);
+    onMenuClick?.(e.key);
   };
 
+
+
+  const handleClose = () => {
+    if (onClose) {
+      setIsClosing(true);
+      setTimeout(() => {
+        onClose();
+        setIsClosing(false);
+      }, 300);
+    }
+  };
+
+  // Clases CSS dinámicas
+  const sidebarClasses = [
+    'sidebar-container',
+    isDark ? 'dark' : 'light',
+    collapsed ? 'collapsed' : '',
+    isMobile ? 'mobile' : '',
+    isOpen ? 'open' : '',
+    isClosing ? 'closing' : ''
+  ].filter(Boolean).join(' ');
+
   return (
-    <div
-      style={{
-        minWidth: collapsed ? 80 : 320,
-        width: collapsed ? 80 : '20vw',
-        maxWidth: collapsed ? 80 : 400,
-        background: isDark ? '#001529' : '#fff',
-        borderRight: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`,
-        transition: 'all 0.2s',
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'relative',
-        boxShadow: '2px 0 8px rgba(0,0,0,0.1)'
-      }}
-    >
-      <div style={{
-        padding: collapsed ? '16px 12px' : '20px 24px',
-        borderBottom: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`,
-        background: isDark ? '#002140' : '#fafafa',
-        transition: 'all 0.2s'
-      }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: collapsed ? 'center' : 'space-between',
-          marginBottom: collapsed ? '0' : '16px'
-        }}>
-          {!collapsed && (
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <HeartOutlined style={{
-                fontSize: '24px',
-                color: '#ff4d4f',
-                marginRight: '12px'
-              }} />
-              <Title
-                level={4}
-                style={{
-                  color: isDark ? '#fff' : '#000',
-                  margin: '0',
-                  fontWeight: 600
-                }}
-              >
-                Mente Sana
-              </Title>
-            </div>
-          )}
-          {collapsed && (
-            <HeartOutlined style={{
-              fontSize: '24px',
-              color: '#ff4d4f'
-            }} />
-          )}
+    <>
+      {/* Overlay para móvil */}
+      {isMobile && isOpen && (
+        <div 
+          className={`sidebar-overlay ${isOpen ? 'visible' : ''}`}
+          onClick={handleClose}
+        />
+      )}
+      
+      <div className={sidebarClasses}>
+        {/* Header del Sidebar */}
+        <div className="sidebar-header">
+          <Button
+            type="text"
+            icon={
+              isMobile
+                ? <CloseOutlined />
+                : (collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />)
+            }
+            onClick={() => {
+              if (isMobile) {
+                handleClose();
+              } else {
+                onToggleCollapse?.();
+              }
+            }}
+            className="navbar-button sidebar-toggle"
+            size="large"
+          />
         </div>
 
-        {!collapsed && (
-          <Space direction="vertical" size="small" style={{ width: '100%' }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}>
-              <Text style={{
-                color: isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)',
-                fontSize: '12px'
-              }}>
-                Tema
-              </Text>
-              <Switch
-                size="small"
-                checked={isDark}
-                onChange={changeTheme}
-                checkedChildren={<MoonOutlined style={{ fontSize: '10px' }} />}
-                unCheckedChildren={<SunOutlined style={{ fontSize: '10px' }} />}
-                style={{
-                  backgroundColor: isDark ? '#1890ff' : '#52c41a'
-                }}
-              />
-            </div>
-            <Text style={{
-              color: isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)',
-              fontSize: '11px',
-              fontStyle: 'italic'
-            }}>
-              Tu bienestar, nuestra prioridad
-            </Text>
-          </Space>
-        )}
-      </div>
+        {/* Menú - Área scrollable */}
+        <div style={{ flex: 1, overflow: 'hidden' }}>
+          <Menu
+            theme={theme}
+            onClick={onClick}
+            className="sidebar-menu"
+            defaultOpenKeys={collapsed ? [] : ["profile"]}
+            selectedKeys={[mapPathToMenuKey(location.pathname)]}
+            mode="inline"
+            inlineCollapsed={isMobile ? false : collapsed}
+            items={getMenuItems()}
+          />
+        </div>
 
-      {/* Botón de colapsar */}
-      <Button
-        type="text"
-        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        onClick={toggleCollapsed}
-        style={{
-          position: 'absolute',
-          top: '16px',
-          right: '-12px',
-          zIndex: 1000,
-          background: isDark ? '#1890ff' : '#fff',
-          border: `1px solid ${isDark ? '#1890ff' : '#d9d9d9'}`,
-          borderRadius: '50%',
-          width: '24px',
-          height: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '12px',
-          color: isDark ? '#fff' : '#1890ff',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-          transition: 'all 0.2s'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'scale(1.1)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'scale(1)';
-        }}
-      />
-
-      {/* Menú */}
-      <div style={{ flex: 1 }}>
-        <Menu
-          theme={theme}
-          onClick={onClick}
-          style={{
-            border: 'none',
-            fontSize: '14px',
-            background: 'transparent'
-          }}
-          defaultOpenKeys={collapsed ? [] : ["profile"]}
-          selectedKeys={[mapPathToMenuKey(location.pathname)]} mode="inline"
-          inlineCollapsed={collapsed}
-          items={getMenuItems()}
-        />
-      </div>
-
-      {/* Footer del Sidebar */}
-      {!collapsed && (
-        <div style={{
-          padding: '16px 24px',
-          borderTop: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`,
-          background: isDark ? '#000c17' : '#f9f9f9'
-        }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            marginBottom: '8px'
-          }}>
-            <div style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              background: `linear-gradient(135deg, ${isDark ? '#1890ff' : '#52c41a'}, ${isDark ? '#722ed1' : '#1890ff'})`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginRight: '12px'
-            }}>
+        {/* Footer del Sidebar - Siempre visible al final */}
+        <div className="sidebar-footer">
+          <div className="user-profile">
+            <div className="user-avatar">
               <UserOutlined style={{ color: '#fff', fontSize: '16px' }} />
             </div>
-            <div>
-              <Text strong style={{
-                color: isDark ? '#fff' : '#000',
-                fontSize: '14px',
-                display: 'block',
-                lineHeight: '1.2'
-              }}>
-                {userProfile?.name || "Usuario"}
-              </Text>
-              <Text style={{
-                color: isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)',
-                fontSize: '12px'
-              }}>
-                Conectado
-              </Text>
-            </div>
+            {!collapsed && (
+              <div className="user-info">
+                <Text className="user-name">
+                  {userProfile?.name || "Usuario"}
+                </Text>
+                <Text className="user-status">
+                  Conectado
+                </Text>
+              </div>
+            )}
           </div>
         </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 };
 

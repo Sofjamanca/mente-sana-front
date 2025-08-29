@@ -1,0 +1,157 @@
+/* Layout Styles */
+.layout-container {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Contenido principal */
+.layout-container .main-content {
+  flex: 1;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Importante para que flex funcione correctamente */
+  overflow-x: hidden;
+}
+
+/* Contenido interno */
+.layout-container .page-content {
+  flex: 1;
+  overflow: visible;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  /* Asegurar que el sticky del navbar funcione */
+  position: relative;
+}
+
+/* Asegurar que el contenido use todo el ancho disponible */
+.layout-container .page-content .content {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Padding para el contenido principal */
+.layout-container .page-content-wrapper {
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 0; /* sin padding superior */
+}
+
+/* Asegurar que todas las páginas usen el ancho completo */
+.layout-container .page-content > * {
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Asegurar que el contenido interno se ajuste correctamente */
+.layout-container .page-content-wrapper {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Prevenir que el contenido se desborde */
+.layout-container .main-content {
+  min-width: 0;
+  flex: 1;
+}
+
+/* Prevenir scroll horizontal en toda la aplicación */
+.layout-container {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+.layout-container .main-content {
+  overflow-x: hidden;
+}
+
+/* Cuando existe sidebar (layout de área privada) */
+.layout-container .main-content.with-sidebar {
+  margin-left: 320px;
+  width: calc(100vw - 320px);
+  min-width: 0;
+  overflow-x: auto;
+}
+
+/* Sidebar collapsed */
+.layout-container .main-content.with-sidebar.sidebar-collapsed {
+  margin-left: 80px;
+  width: calc(100vw - 80px);
+  min-width: 0;
+  overflow-x: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .layout-container .main-content.mobile {
+    padding-top: 0; /* sin padding superior en mobile */
+  }
+
+  /* En móvil, el contenido principal debe ocupar toda la pantalla */
+  .layout-container .main-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+  }
+  
+  .layout-container .main-content.sidebar-collapsed {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+  }
+}
+
+/* Overlay ahora solo es responsabilidad del Sidebar */
+
+/* Animaciones de transición */
+.layout-container .main-content {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Scrollbar personalizado */
+.layout-container .page-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.layout-container .page-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.layout-container .page-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.layout-container .page-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Estados de carga */
+.layout-container .main-content.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Transiciones suaves para cambios de tema */
+.layout-container * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Mejoras para dispositivos táctiles */
+@media (hover: none) and (pointer: coarse) {
+  .layout-container .page-content {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .layout-container .main-content {
+    -webkit-overflow-scrolling: touch;
+  }
+}

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/landing/Navbar';
 import { navItems } from '../components/landing/data';
 import { HeartIcon } from '../components/landing/icons';
 import { HeroSection, FeaturesSection, HowItWorksSection, DemoSection, EventsSection, FAQSection } from '../components/landing/sections';

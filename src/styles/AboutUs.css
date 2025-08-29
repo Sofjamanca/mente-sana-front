@@ -7,10 +7,9 @@
 }
 
 .about-container {
-  max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #ffeef8 0%, #f0e6ff 50%, #ffe0f0 100%);
   min-height: 100vh;
   position: relative;

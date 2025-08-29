@@ -80,7 +80,7 @@ export const DemoSection = ({ theme }: DemoSectionProps) => {
                 {/* Demo Slider */}
                 <div className="demo-slider-container">
                   <label className="demo-slider-label">
-                    ¿Cómo te sientes hoy?
+                    ¿Cómo te sentís hoy?
                   </label>
                   <input
                     type="range"
@@ -103,7 +103,7 @@ export const DemoSection = ({ theme }: DemoSectionProps) => {
                 {/* Demo Message Input */}
                 <div className="demo-message-container">
                   <label className="demo-message-label">
-                    Cuéntanos sobre tu día (opcional)
+                    Contanos sobre tu día (opcional)
                   </label>
                   <textarea
                     value={demoMessage}

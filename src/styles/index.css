@@ -1,44 +1,45 @@
 @import './variables.css';
 
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  max-width: 100vw;
+  font-family: 'Poppins', sans-serif;
+  scrollbar-gutter: auto;
+}
+
 body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
 }
 
 .app-container {
   display: flex;
-  min-height: 100vh; /* Ajuste para que ocupe toda la pantalla */
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 250px;
-  height: 100vh;
-  background-color: var(--sidebar-bg);
-  color: white;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.main-content {
-  flex: 1;
-  /* margin-left: 250px; */
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Que tome toda la pantalla */
-}
-
-.content {
-  flex-grow: 1; /* Para que ocupe todo el espacio disponible */
-  padding: 20px;
-  /* overflow-y: auto; */
-}
-
-.footer {
-  background: var(--footer-bg);
-  color: var(--footer-text);
-  text-align: center;
-  padding: 20px 50px;
+.main-btn {
   width: 100%;
+  background: var(--gradient-rose);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-soft);
+}
+
+.main-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
 }
