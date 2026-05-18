@@ -1,0 +1,204 @@
+@import "./variables.css";
+
+.auth-public {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.auth-public .lp-header {
+  flex-shrink: 0;
+}
+
+.auth-public__header-spacer {
+  flex: 1;
+  min-width: 0;
+}
+
+.auth-public__stage {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  isolation: isolate;
+  background:
+    radial-gradient(60% 70% at 15% 30%, color-mix(in srgb, var(--color-primary) 14%, transparent) 0%, transparent 60%),
+    radial-gradient(55% 70% at 85% 70%, color-mix(in srgb, var(--color-purple) 14%, transparent) 0%, transparent 60%),
+    linear-gradient(180deg, var(--color-surface-cream) 0%, color-mix(in srgb, var(--color-surface-cream) 80%, white) 100%);
+  overflow: hidden;
+}
+
+.auth-public__stage .lp-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Misma regla de ancho que la landing (--lp-max viene de .lp en Landing.css; no tocar el navbar) */
+.auth-public__content {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: var(--lp-max, min(80rem, calc(100% - 2rem)));
+  margin-inline: auto;
+  padding: clamp(1rem, 3vw, 1.75rem) clamp(0.75rem, 2vw, 1.25rem) clamp(1.75rem, 5vw, 2.75rem);
+  box-sizing: border-box;
+}
+
+.auth-public__content--login {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(min(100%, 360px), min(560px, 46vw));
+  gap: clamp(0.75rem, 2.5vw, 2rem);
+  align-items: center;
+  min-height: min(540px, calc(100vh - 5.5rem));
+}
+
+.auth-public .auth-panel--login {
+  width: 100%;
+  max-width: min(560px, 100%);
+}
+
+.auth-public__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.auth-public__mascot {
+  max-width: min(100%, 320px);
+  height: auto;
+  filter: drop-shadow(0 20px 36px rgba(15, 15, 19, 0.14));
+}
+
+.auth-public__intro-copy {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  max-width: 32ch;
+}
+
+.auth-public__panel-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.auth-public__content--login .auth-public__panel-wrap {
+  justify-content: flex-end;
+}
+
+.auth-public__panel-wrap--wide {
+  width: 100%;
+}
+
+/* Registro: el bloque ocupa todo el ancho útil del contenedor (sin centrar raro ni min-height forzado) */
+.auth-public__content--register {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+.auth-public__content--register .auth-public__panel-wrap--wide {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+.auth-public__content--register .auth-panel--register {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.auth-public .auth-panel {
+  border-radius: var(--lp-radius-lg, 20px);
+  box-shadow: 0 24px 50px -28px rgba(15, 15, 19, 0.26);
+}
+
+.auth-public .auth-panel h1,
+.auth-public .register-content h1,
+.auth-public .register-content__title {
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
+  line-height: 1.06;
+}
+
+.auth-public .auth-panel--login .auth-form .lp-btn--primary {
+  width: 100%;
+}
+
+.auth-public .register-actions {
+  flex-wrap: wrap;
+}
+
+.auth-public .register-actions .lp-btn {
+  min-width: min(100%, 8rem);
+}
+
+.auth-public .register-aside {
+  background: var(--color-night);
+  border-bottom-color: rgba(255, 248, 242, 0.1);
+}
+
+.auth-public .register-aside-title {
+  color: #fff8f2;
+}
+
+.auth-public .register-aside .auth-eyebrow,
+.auth-public .register-aside .lp-hero__eyebrow {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 248, 242, 0.18);
+  color: #fff8f2;
+  margin-bottom: 1rem;
+}
+
+.auth-public .lp-btn:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+  transform: none;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .auth-public__content--login {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .auth-public__intro {
+    align-items: center;
+    text-align: center;
+  }
+
+  .auth-public__intro-copy {
+    max-width: 42ch;
+  }
+
+  .auth-public__content--login .auth-public__panel-wrap {
+    justify-content: center;
+  }
+
+  .auth-public__mascot {
+    max-width: min(100%, 240px);
+  }
+
+  .auth-public__content--register {
+    flex: none;
+    min-height: auto;
+  }
+
+  .auth-public__content--register .auth-public__panel-wrap--wide,
+  .auth-public__content--register .auth-panel--register {
+    flex: none;
+    min-height: auto;
+  }
+}

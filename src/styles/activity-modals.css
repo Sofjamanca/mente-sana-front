@@ -1,0 +1,143 @@
+@import "./variables.css";
+
+/* Envoltorio del Modal (siempre presente): los estilos enganchan aquí */
+.ant-modal-wrap.ms-modal-activity {
+  -webkit-font-smoothing: antialiased;
+}
+
+.ant-modal-wrap.ms-modal-activity--breath {
+  --ms-modal-max: 700px;
+}
+
+.ant-modal-wrap.ms-modal-activity--memory {
+  --ms-modal-max: 900px;
+}
+
+.ant-modal-wrap.ms-modal-activity--patterns {
+  --ms-modal-max: 800px;
+}
+
+.ant-modal-wrap.ms-modal-activity .ant-modal {
+  top: 0;
+  padding-bottom: 0;
+  width: min(var(--ms-modal-max, 800px), calc(100vw - 24px)) !important;
+  max-width: calc(100vw - 24px) !important;
+}
+
+.ant-modal-wrap.ms-modal-activity .ant-modal-content {
+  padding: 0 !important;
+  border-radius: 22px !important;
+  overflow: hidden;
+  background: var(--color-card) !important;
+  border: 1px solid var(--color-line) !important;
+  box-shadow: 0 28px 56px -28px rgba(15, 15, 19, 0.38) !important;
+}
+
+.ant-modal-wrap.ms-modal-activity .ant-modal-header {
+  margin: 0 !important;
+  padding: 18px 52px 18px 22px !important;
+  border-bottom: 1px solid var(--color-line) !important;
+  background: var(--color-card) !important;
+}
+
+.ant-modal-wrap.ms-modal-activity .ant-modal-title {
+  margin: 0 !important;
+  font-family: var(--font-display) !important;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.15rem, 0.45rem + 1.1vw, 1.4rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--color-ink) !important;
+}
+
+.ant-modal-wrap.ms-modal-activity--breath .ant-modal-title {
+  font-family: var(--font-body) !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em;
+}
+
+.ant-modal-wrap.ms-modal-activity .ant-modal-title .ant-space {
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.ant-modal-wrap.ms-modal-activity .ant-modal-close {
+  top: 12px !important;
+  right: 12px !important;
+  width: 42px !important;
+  height: 42px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-muted) !important;
+  border-radius: 12px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.ant-modal-wrap.ms-modal-activity .ant-modal-close:hover {
+  background: color-mix(in srgb, var(--color-purple) 10%, white) !important;
+  color: var(--color-ink) !important;
+}
+
+.ant-modal-wrap.ms-modal-activity .ant-modal-body {
+  padding: 20px 22px 24px !important;
+  background: var(--color-surface-cream) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  max-height: min(78vh, 880px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  font-family: var(--font-body);
+  color: var(--color-ink);
+}
+
+.ant-modal-wrap.ms-modal-activity .ant-btn-primary:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-purple) 88%, white) 0%,
+    var(--color-purple) 100%
+  ) !important;
+  border: none !important;
+  font-family: var(--font-body) !important;
+  font-weight: 600 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--color-purple) 55%, transparent) !important;
+}
+
+.ant-modal-wrap.ms-modal-activity .ant-btn-default:not(:disabled) {
+  font-family: var(--font-body) !important;
+  font-weight: 600 !important;
+  border-radius: 14px !important;
+  border-color: var(--color-line) !important;
+  background: var(--color-card) !important;
+  color: var(--color-ink) !important;
+}
+
+.ant-modal-wrap.ms-modal-activity .ant-progress-inner {
+  border-radius: 999px !important;
+  background: color-mix(in srgb, var(--color-line) 65%, white) !important;
+}
+
+.ant-modal-wrap.ms-modal-activity .ant-progress-bg {
+  border-radius: 999px !important;
+}
+
+@media (max-width: 576px) {
+  .ant-modal-wrap.ms-modal-activity .ant-modal-header {
+    padding: 14px 46px 14px 16px !important;
+  }
+
+  .ant-modal-wrap.ms-modal-activity .ant-modal-body {
+    padding: 16px 16px 20px !important;
+    max-height: calc(100dvh - 140px);
+  }
+
+  .ant-modal-wrap.ms-modal-activity .ant-modal-close {
+    top: 8px !important;
+    right: 8px !important;
+  }
+}

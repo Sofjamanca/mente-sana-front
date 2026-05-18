@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import '../styles/AboutUs.css';
+import sofiGianImage from '../assets/SofiGian.jpg';
+import eurekaImage from '../assets/eureka.jpeg';
 
 const AboutUs = () => {
   const [isVisible, setIsVisible] = useState<Record<string, boolean>>({});
@@ -50,7 +52,7 @@ const AboutUs = () => {
       >
         <div className="about-image">
           <div className="image-wrapper">
-            <img src="src/assets/SofiGian.jpg" alt="Sofi y Gian" />
+            <img src={sofiGianImage} alt="Sofi y Gian" />
             <div className="image-overlay"></div>
           </div>
         </div>
@@ -70,7 +72,7 @@ const AboutUs = () => {
         data-animate
       >
         <div className="eureka-image-wrapper">
-          <img src="src/assets/eureka.jpeg" alt="Programa Eureka" />
+          <img src={eurekaImage} alt="Programa Eureka" />
         </div>
         <p>
           El proyecto <strong>Mente Sana</strong> fue financiado por <strong>Eureka</strong>, un programa que promueve la participación activa de jóvenes de entre 15 y 29 años a través de la creación de proyectos territoriales y grupales que generen oportunidades de desarrollo personal y colectivo.

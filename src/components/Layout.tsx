@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Layout as AntLayout } from 'antd';
+import { useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import useResponsive from '../hooks/useResponsive';
@@ -18,8 +19,22 @@ const Layout: React.FC<LayoutProps> = ({ children, onLogout }) => {
   const { isMobile, sidebarOpen, closeSidebar, toggleSidebar } = useResponsive();
   const { theme, setTheme } = useUser();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  
-
+  const location = useLocation();
+  const userShellRoutes = [
+    '/home',
+    '/daily-summary',
+    '/contacts',
+    '/blogs',
+    '/about-us',
+    '/profile/edit',
+    '/events/upcoming',
+    '/events/past',
+  ];
+  const isBlogsRoute = location.pathname === "/blogs" || location.pathname.startsWith("/blogs/");
+  const usesCustomDashboardShell =
+    userShellRoutes.includes(location.pathname) ||
+    isBlogsRoute ||
+    /^\/events\/[^/]+$/.test(location.pathname);
 
   // Manejar cambios en el estado collapsed del sidebar
   const handleSidebarCollapse = (collapsed: boolean) => {
@@ -38,6 +53,10 @@ const Layout: React.FC<LayoutProps> = ({ children, onLogout }) => {
       setSidebarCollapsed(!sidebarCollapsed);
     }
   };
+
+  if (usesCustomDashboardShell) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="layout-container">

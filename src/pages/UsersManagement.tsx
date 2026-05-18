@@ -469,8 +469,8 @@ const UsersManagement: React.FC = () => {
 
       {/* Estadísticas */}
       {stats && stats.usersByRole && (
-        <Row gutter={16} style={{ marginBottom: 24 }}>
-          <Col span={6}>
+        <Row gutter={[16, 16]} style={{ marginBottom: 24 }} className="admin-stats-row">
+          <Col xs={24} sm={12} lg={8} xl={6}>
             <Card>
               <Statistic
                 title="Total Usuarios"
@@ -480,7 +480,7 @@ const UsersManagement: React.FC = () => {
               />
             </Card>
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} lg={8} xl={6}>
             <Card>
               <Statistic
                 title="Administradores"
@@ -490,7 +490,7 @@ const UsersManagement: React.FC = () => {
               />
             </Card>
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} lg={8} xl={6}>
             <Card>
               <Statistic
                 title="Editores"
@@ -500,7 +500,7 @@ const UsersManagement: React.FC = () => {
               />
             </Card>
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} lg={8} xl={6}>
             <Card>
               <Statistic
                 title="Usuarios Activos"
@@ -510,7 +510,7 @@ const UsersManagement: React.FC = () => {
               />
             </Card>
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} lg={8} xl={6}>
             <Card>
               <Statistic
                 title="Usuarios Inactivos"
@@ -520,10 +520,10 @@ const UsersManagement: React.FC = () => {
               />
             </Card>
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} lg={8} xl={6}>
             <Card>
               <Statistic
-                title="Nuevos Esta Semana"
+                title="Nuevos esta semana"
                 value={stats.newUsersThisWeek || 0}
                 prefix={<UserOutlined />}
                 valueStyle={{ color: '#fa8c16' }}
@@ -535,8 +535,8 @@ const UsersManagement: React.FC = () => {
 
       {/* Filtros y Crear Usuario */}
       <Card style={{ marginBottom: 24 }}>
-        <Row gutter={16} align="middle" style={{ marginBottom: 16 }}>
-          <Col span={8}>
+        <Row gutter={[16, 16]} align="middle" style={{ marginBottom: 16 }} className="admin-filters-row">
+          <Col xs={24} md={12} lg={8}>
             <Search
               placeholder="Buscar por nombre, email, localidad..."
               allowClear
@@ -545,7 +545,7 @@ const UsersManagement: React.FC = () => {
               prefix={<SearchOutlined />}
             />
           </Col>
-          <Col span={4}>
+          <Col xs={24} sm={12} lg={4}>
             <Select
               placeholder="Filtrar por rol"
               value={roleFilter}
@@ -558,7 +558,7 @@ const UsersManagement: React.FC = () => {
               <Select.Option value="USER">Usuarios</Select.Option>
             </Select>
           </Col>
-          <Col span={4}>
+          <Col xs={24} sm={12} lg={4}>
             <Select
               placeholder="Estado"
               value={activeFilter}
@@ -570,8 +570,8 @@ const UsersManagement: React.FC = () => {
               <Select.Option value="INACTIVE">Inactivos</Select.Option>
             </Select>
           </Col>
-          <Col span={8}>
-            <Space>
+          <Col xs={24} md={24} lg={8}>
+            <Space wrap className="admin-filters-actions">
               <Button 
                 type="primary" 
                 icon={<PlusOutlined />}

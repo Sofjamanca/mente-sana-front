@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Calendar, MapPin, Save, Loader2 } from 'lucide-react';
+import { User, Calendar, MapPin, Save, Loader2, ShieldCheck, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import "../styles/EditProfile.css"
@@ -288,35 +288,40 @@ const EditProfile = () => {
 
   if (initialLoad) {
     return (
-      <div className="edit-profile-container">
-        <div className="edit-profile-box">
-          <div className="loading-container">
+      <div className="ep-page">
+        <section className="ep-card">
+          <div className="ep-loading">
             <Loader2 className="loading-spinner" />
-            <span className="loading-text">Cargando perfil...</span>
+            <span>Cargando perfil...</span>
           </div>
-        </div>
+        </section>
       </div>
     );
   }
 
   return (
-    <div className="edit-profile-container">
-      <div className="edit-profile-box">
-        <div className="header">
-          <User className="header-icon" />
-          <h1 className="title">Editar Perfil</h1>
-        </div>
+    <div className="ep-page">
+      <section className="ep-card">
+        <header className="ep-header">
+          <span className="ep-eyebrow">
+            <Sparkles size={14} />
+            Tu perfil
+          </span>
+          <h1>Editar Perfil</h1>
+          <p>Actualizá tu información personal para mantener tu experiencia al día.</p>
+        </header>
 
         {message.text && (
-          <div className={`message ${message.type === 'success' ? 'success' : 'error'}`}>
+          <div className={`ep-message ${message.type === 'success' ? 'success' : 'error'}`}>
             {message.text}
           </div>
         )}
 
-        <div className="form-container">
-          <div className="input-group">
+        <div className="ep-form">
+          <div className="ep-grid">
+            <div className="ep-field ep-field-full">
             <label htmlFor="name">
-              <User className="label-icon" />
+                <User className="ep-label-icon" />
               Nombre completo
             </label>
             <input
@@ -330,9 +335,9 @@ const EditProfile = () => {
             />
           </div>
 
-          <div className="input-group">
+            <div className="ep-field">
             <label htmlFor="birthDate">
-              <Calendar className="label-icon" />
+                <Calendar className="ep-label-icon" />
               Fecha de nacimiento
             </label>
             <input
@@ -346,9 +351,9 @@ const EditProfile = () => {
             />
           </div>
 
-          <div className="input-group">
+            <div className="ep-field">
             <label htmlFor="province">
-              <MapPin className="label-icon" />
+                <MapPin className="ep-label-icon" />
               Provincia
             </label>
             <select
@@ -369,9 +374,9 @@ const EditProfile = () => {
             </select>
           </div>
 
-          <div className="input-group">
+            <div className="ep-field ep-field-full">
             <label htmlFor="locality">
-              <MapPin className="label-icon" />
+                <MapPin className="ep-label-icon" />
               Localidad
             </label>
             <select
@@ -395,12 +400,18 @@ const EditProfile = () => {
                 </option>
               ))}
             </select>
+            </div>
           </div>
 
-          <div className="button-group">
+          <div className="ep-footer">
+            <p className="ep-privacy">
+              <ShieldCheck size={14} />
+              Tus datos se almacenan de forma segura.
+            </p>
+            <div className="ep-actions">
             <button
               type="button"
-              className="cancel-btn"
+                className="ep-btn ep-btn-ghost"
               onClick={() => navigate('/home')}
             >
               Cancelar
@@ -409,23 +420,24 @@ const EditProfile = () => {
               type="button"
               disabled={loading}
               onClick={handleSubmit}
-              className="submit-btn"
+                className="ep-btn ep-btn-primary"
             >
               {loading ? (
                 <>
-                  <Loader2 className="btn-icon loading-spinner" />
+                    <Loader2 className="ep-btn-icon loading-spinner" />
                   Guardando...
                 </>
               ) : (
                 <>
-                  <Save className="btn-icon" />
+                    <Save className="ep-btn-icon" />
                   Guardar cambios
                 </>
               )}
             </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+      </section>
     </div>
   );
 };

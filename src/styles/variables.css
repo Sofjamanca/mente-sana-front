@@ -1,14 +1,30 @@
 :root {
-  --background-dark: #a32967;
+  /* Mentesana: titulares serif (Instrument Serif) + UI sans (Geist) */
+  --font-display: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
+  --font-body: "Geist", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --color-surface-cream: #fdf9f3;
+  --color-card: #ffffff;
+  --color-ink: #0f0f13;
+  --color-muted: #5b5e66;
+  --color-line: #e8e2dc;
+  --color-primary: #ff3d8e;
+  --color-purple: #7a4dff;
+  --color-coral: #ff7a5b;
+  --color-mint: #63e2c1;
+  --color-sky: #7cc7ff;
+  --color-night: #0f0f13;
+
+  --background-dark: var(--color-night);
   --text-dark: white;
-  --background-light: #ffe0f0;
-  --text-light: black;
+  --background-light: var(--color-surface-cream);
+  --text-light: var(--color-ink);
 }
 
 /* Estilos generales */
 body {
   margin: 0;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--font-body);
   transition: background 0.3s, color 0.3s;
 }
 

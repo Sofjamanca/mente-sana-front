@@ -1,23 +1,15 @@
-import React, { useState } from 'react';
-import { Modal, Button, Progress, Typography, Space, Card, Radio, Row, Col, Rate, Tag } from 'antd';
-import { 
-  HeartOutlined, 
-  CloseOutlined,
-  ArrowRightOutlined,
-  ArrowLeftOutlined,
-  CheckCircleOutlined,
-  BulbOutlined
-} from '@ant-design/icons';
-import '../styles/AnxietyPatterns.css';
-
-const { Title, Text, Paragraph } = Typography;
+import React, { useState, CSSProperties } from "react";
+import { Modal, Rate } from "antd";
+import { ArrowLeft, ArrowRight, CheckCircle2, Heart, Lightbulb } from "lucide-react";
+import "../styles/ms-activities.css";
+import "../styles/activity-modals.css";
 
 interface AnxietyPatternsProps {
   visible: boolean;
   onClose: () => void;
 }
 
-type Step = 'feeling' | 'situation' | 'timing' | 'tips';
+type Step = "feeling" | "situation" | "timing" | "tips";
 
 interface AnxietyData {
   intensity: number;
@@ -28,58 +20,58 @@ interface AnxietyData {
 }
 
 const AnxietyPatterns: React.FC<AnxietyPatternsProps> = ({ visible, onClose }) => {
-  const [currentStep, setCurrentStep] = useState<Step>('feeling');
+  const [currentStep, setCurrentStep] = useState<Step>("feeling");
   const [anxietyData, setAnxietyData] = useState<AnxietyData>({
     intensity: 5,
     situation: [],
-    timeOfDay: '',
-    place: '',
-    thoughts: ''
+    timeOfDay: "",
+    place: "",
+    thoughts: "",
   });
 
   const situations = [
-    { key: 'school', label: 'Escuela', emoji: '🏫' },
-    { key: 'friends', label: 'Amigos', emoji: '👥' },
-    { key: 'family', label: 'Familia', emoji: '👨‍👩‍👧‍👦' },
-    { key: 'exams', label: 'Exámenes', emoji: '📚' },
-    { key: 'social', label: 'Redes Sociales', emoji: '📱' },
-    { key: 'future', label: 'Futuro', emoji: '🔮' },
-    { key: 'body', label: 'Imagen Corporal', emoji: '🪞' },
-    { key: 'performance', label: 'Rendimiento', emoji: '🎯' }
+    { key: "school", label: "Escuela", emoji: "🏫" },
+    { key: "friends", label: "Amigos", emoji: "👥" },
+    { key: "family", label: "Familia", emoji: "👨‍👩‍👧‍👦" },
+    { key: "exams", label: "Exámenes", emoji: "📚" },
+    { key: "social", label: "Redes sociales", emoji: "📱" },
+    { key: "future", label: "Futuro", emoji: "🔮" },
+    { key: "body", label: "Imagen corporal", emoji: "🪞" },
+    { key: "performance", label: "Rendimiento", emoji: "🎯" },
   ];
 
   const timesOfDay = [
-    { key: 'morning', label: 'Mañana', emoji: '🌅' },
-    { key: 'afternoon', label: 'Tarde', emoji: '☀️' },
-    { key: 'evening', label: 'Noche', emoji: '🌙' },
-    { key: 'anytime', label: 'Cualquier hora', emoji: '🕐' }
+    { key: "morning", label: "Mañana", emoji: "🌅" },
+    { key: "afternoon", label: "Tarde", emoji: "☀️" },
+    { key: "evening", label: "Noche", emoji: "🌙" },
+    { key: "anytime", label: "Cualquier hora", emoji: "🕐" },
   ];
 
   const places = [
-    { key: 'home', label: 'Casa', emoji: '🏠' },
-    { key: 'school', label: 'Escuela', emoji: '🏫' },
-    { key: 'public', label: 'Lugares públicos', emoji: '🏢' },
-    { key: 'online', label: 'En línea', emoji: '💻' }
+    { key: "home", label: "Casa", emoji: "🏠" },
+    { key: "school", label: "Escuela", emoji: "🏫" },
+    { key: "public", label: "Lugares públicos", emoji: "🏢" },
+    { key: "online", label: "En línea", emoji: "💻" },
   ];
 
   const commonThoughts = [
-    { key: 'failure', label: 'No soy lo suficientemente bueno', emoji: '😔' },
-    { key: 'judgment', label: 'Todos me están juzgando', emoji: '👀' },
-    { key: 'catastrophe', label: 'Algo malo va a pasar', emoji: '😰' },
-    { key: 'control', label: 'No puedo controlar esto', emoji: '🌪️' },
-    { key: 'perfect', label: 'Tengo que ser perfecto', emoji: '⭐' },
-    { key: 'rejection', label: 'Van a rechazarme', emoji: '💔' }
+    { key: "failure", label: "No soy lo suficientemente bueno/a", emoji: "😔" },
+    { key: "judgment", label: "Todos me están juzgando", emoji: "👀" },
+    { key: "catastrophe", label: "Algo malo va a pasar", emoji: "😰" },
+    { key: "control", label: "No puedo controlar esto", emoji: "🌪️" },
+    { key: "perfect", label: "Tengo que ser perfecto/a", emoji: "⭐" },
+    { key: "rejection", label: "Van a rechazarme", emoji: "💔" },
   ];
 
-  const steps = {
-    feeling: { title: '¿Cómo te sientes?', progress: 25 },
-    situation: { title: '¿Qué está pasando?', progress: 50 },
-    timing: { title: '¿Cuándo y dónde?', progress: 75 },
-    tips: { title: 'Estrategias para ti', progress: 100 }
+  const steps: Record<Step, { title: string; progress: number }> = {
+    feeling: { title: "¿Cómo te sentís?", progress: 25 },
+    situation: { title: "¿Qué está pasando?", progress: 50 },
+    timing: { title: "¿Cuándo y dónde?", progress: 75 },
+    tips: { title: "Estrategias para vos", progress: 100 },
   };
 
   const handleNext = () => {
-    const stepOrder: Step[] = ['feeling', 'situation', 'timing', 'tips'];
+    const stepOrder: Step[] = ["feeling", "situation", "timing", "tips"];
     const currentIndex = stepOrder.indexOf(currentStep);
     if (currentIndex < stepOrder.length - 1) {
       setCurrentStep(stepOrder[currentIndex + 1]);
@@ -87,7 +79,7 @@ const AnxietyPatterns: React.FC<AnxietyPatternsProps> = ({ visible, onClose }) =
   };
 
   const handlePrevious = () => {
-    const stepOrder: Step[] = ['feeling', 'situation', 'timing', 'tips'];
+    const stepOrder: Step[] = ["feeling", "situation", "timing", "tips"];
     const currentIndex = stepOrder.indexOf(currentStep);
     if (currentIndex > 0) {
       setCurrentStep(stepOrder[currentIndex - 1]);
@@ -95,253 +87,240 @@ const AnxietyPatterns: React.FC<AnxietyPatternsProps> = ({ visible, onClose }) =
   };
 
   const handleClose = () => {
-    setCurrentStep('feeling');
+    setCurrentStep("feeling");
     setAnxietyData({
       intensity: 5,
       situation: [],
-      timeOfDay: '',
-      place: '',
-      thoughts: ''
+      timeOfDay: "",
+      place: "",
+      thoughts: "",
     });
     onClose();
   };
 
   const handleSituationToggle = (key: string) => {
-    setAnxietyData(prev => ({
+    setAnxietyData((prev) => ({
       ...prev,
       situation: prev.situation.includes(key)
-        ? prev.situation.filter(s => s !== key)
-        : [...prev.situation, key]
+        ? prev.situation.filter((s) => s !== key)
+        : [...prev.situation, key],
     }));
   };
 
   const getPersonalizedTips = () => {
-    const tips = [];
-    
-    // Tips basados en intensidad
+    const tips: { title: string; description: string; emoji: string; color: string }[] = [];
+
     if (anxietyData.intensity >= 8) {
       tips.push({
-        title: 'Respiración de emergencia',
-        description: 'Inhala 4 segundos, aguanta 4, exhala 6. Repite hasta sentirte mejor.',
-        emoji: '🫁',
-        color: '#ef4444'
+        title: "Respiración de apoyo",
+        description: "Inspirá 4, aguantá 4, expirá 6. Repetí hasta sentir un poco más de calma.",
+        emoji: "🫁",
+        color: "var(--color-coral)",
       });
     }
-    
-    // Tips basados en situación
-    if (anxietyData.situation.includes('school') || anxietyData.situation.includes('exams')) {
+
+    if (anxietyData.situation.includes("school") || anxietyData.situation.includes("exams")) {
       tips.push({
-        title: 'Técnica de estudio tranquila',
-        description: 'Divide las tareas en partes pequeñas. Celebra cada logro.',
-        emoji: '📚',
-        color: '#3b82f6'
+        title: "Pasos chicos",
+        description: "Partí la tarea en partes. Cada mini logro cuenta.",
+        emoji: "📚",
+        color: "var(--color-sky)",
       });
     }
-    
-    if (anxietyData.situation.includes('social')) {
+
+    if (anxietyData.situation.includes("social")) {
       tips.push({
-        title: 'Límites digitales',
-        description: 'Pon el teléfono en modo avión por 30 minutos y haz algo que disfrutes.',
-        emoji: '📱',
-        color: '#8b5cf6'
+        title: "Pausa digital",
+        description: "Proba 20 minutos sin redes y dedicá ese tiempo a algo que te guste.",
+        emoji: "📱",
+        color: "var(--color-purple)",
       });
     }
-    
-    // Tips basados en momento del día
-    if (anxietyData.timeOfDay === 'morning') {
+
+    if (anxietyData.timeOfDay === "morning") {
       tips.push({
-        title: 'Rutina matutina calmante',
-        description: 'Levántate 10 minutos antes y dedica tiempo a ti mismo.',
-        emoji: '🌅',
-        color: '#f59e0b'
+        title: "Mañana suave",
+        description: "¿Podés levantarte 5 minutos antes para estirar o tomar agua sin apuro?",
+        emoji: "🌅",
+        color: "#ffc85c",
       });
     }
-    
-    // Tips generales siempre útiles
+
     tips.push(
       {
-        title: 'Técnica 5-4-3-2-1',
-        description: 'Nombra 5 cosas que ves, 4 que tocas, 3 que escuchas, 2 que hueles, 1 que saboreas.',
-        emoji: '👀',
-        color: '#10b981'
+        title: "5-4-3-2-1",
+        description: "5 cosas que ves, 4 que tocás, 3 que escuchás, 2 que olés, 1 que saboreás.",
+        emoji: "👀",
+        color: "var(--color-mint)",
       },
       {
-        title: 'Mensaje a ti mismo',
-        description: 'Háblate como le hablarías a tu mejor amigo. Con cariño y comprensión.',
-        emoji: '💝',
-        color: '#f97316'
+        title: "Hablarte mejor",
+        description: "Escribí una frase que le dirías a un amigo en tu lugar.",
+        emoji: "💝",
+        color: "var(--color-primary)",
       }
     );
-    
-    return tips.slice(0, 4); // Máximo 4 tips
+
+    return tips.slice(0, 4);
   };
 
   const renderStepContent = () => {
     switch (currentStep) {
-      case 'feeling':
+      case "feeling":
         return (
-          <div className="step-content">
-            <div className="feeling-meter">
-              <Title level={4}>¿Qué tan ansioso/a te sientes ahora?</Title>
-              <div className="intensity-scale">
-                <Rate 
-                  count={10} 
-                  value={anxietyData.intensity} 
-                  onChange={(value) => setAnxietyData(prev => ({ ...prev, intensity: value || 5 }))}
-                  character="💚"
-                  style={{ fontSize: '32px' }}
-                />
-                <div className="intensity-labels">
-                  <Text>1 - Muy tranquilo</Text>
-                  <Text>10 - Muy ansioso</Text>
-                </div>
+          <div className="ms-pat-step">
+            <h4 className="ms-pat-heading">¿Qué tan ansioso/a te sentís ahora?</h4>
+            <div className="intensity-scale">
+              <Rate
+                count={10}
+                value={anxietyData.intensity}
+                onChange={(value) => setAnxietyData((prev) => ({ ...prev, intensity: value || 5 }))}
+                character="💚"
+                style={{ fontSize: 28 }}
+              />
+              <div className="intensity-labels">
+                <span>1 · tranquilo/a</span>
+                <span>10 · muy ansioso/a</span>
               </div>
-              
-              <div className="intensity-description">
-                <Text style={{ fontSize: '18px', color: '#6b7280' }}>
-                  {anxietyData.intensity <= 3 && "Te sientes bastante tranquilo 😌"}
-                  {anxietyData.intensity > 3 && anxietyData.intensity <= 6 && "Sientes algo de nervios 😐"}
-                  {anxietyData.intensity > 6 && anxietyData.intensity <= 8 && "Te sientes bastante ansioso 😰"}
-                  {anxietyData.intensity > 8 && "Te sientes muy ansioso 😫"}
-                </Text>
-              </div>
+            </div>
+
+            <div className="intensity-description">
+              {anxietyData.intensity <= 3 && "Te sentís bastante tranquilo/a."}
+              {anxietyData.intensity > 3 && anxietyData.intensity <= 6 && "Hay un poco de nervios, es entendible."}
+              {anxietyData.intensity > 6 && anxietyData.intensity <= 8 && "Está fuerte, pero podés acompañarte."}
+              {anxietyData.intensity > 8 && "Está muy intenso. Ir despacio también es valiente."}
             </div>
           </div>
         );
 
-      case 'situation':
+      case "situation":
         return (
-          <div className="step-content">
-            <Title level={4}>¿Qué situaciones te generan ansiedad?</Title>
-            <Text style={{ color: '#6b7280', marginBottom: '24px', display: 'block' }}>
-              Puedes seleccionar varias opciones
-            </Text>
-            
-            <Row gutter={[12, 12]}>
+          <div className="ms-pat-step">
+            <h4 className="ms-pat-heading">¿Qué situaciones te disparan?</h4>
+            <span className="ms-pat-sub">Podés elegir varias.</span>
+
+            <div className="ms-pat-grid">
               {situations.map((situation) => (
-                <Col xs={12} sm={8} md={6} key={situation.key}>
-                  <Card
-                    hoverable
-                    className={`situation-card ${anxietyData.situation.includes(situation.key) ? 'selected' : ''}`}
-                    onClick={() => handleSituationToggle(situation.key)}
-                  >
-                    <div className="situation-content">
-                      <div className="situation-emoji">{situation.emoji}</div>
-                      <Text className="situation-label">{situation.label}</Text>
-                    </div>
-                  </Card>
-                </Col>
+                <button
+                  key={situation.key}
+                  type="button"
+                  className={`ms-select-card ${anxietyData.situation.includes(situation.key) ? "is-selected" : ""}`}
+                  aria-pressed={anxietyData.situation.includes(situation.key)}
+                  onClick={() => handleSituationToggle(situation.key)}
+                >
+                  <span className="ms-select-card__emoji">{situation.emoji}</span>
+                  <span className="ms-select-card__label">{situation.label}</span>
+                </button>
               ))}
-            </Row>
+            </div>
 
             <div className="thoughts-section">
-              <Title level={5}>¿Qué pensamientos tienes?</Title>
-              <Row gutter={[8, 8]}>
+              <h4 className="ms-pat-heading">¿Qué pensamiento aparece más?</h4>
+              <div className="ms-pat-grid ms-pat-grid--tags">
                 {commonThoughts.map((thought) => (
-                  <Col key={thought.key}>
-                    <Tag
-                      className={`thought-tag ${anxietyData.thoughts === thought.key ? 'selected' : ''}`}
-                      onClick={() => setAnxietyData(prev => ({ 
-                        ...prev, 
-                        thoughts: prev.thoughts === thought.key ? '' : thought.key 
-                      }))}
-                    >
-                      {thought.emoji} {thought.label}
-                    </Tag>
-                  </Col>
+                  <button
+                    key={thought.key}
+                    type="button"
+                    className={`ms-thought-btn ${anxietyData.thoughts === thought.key ? "is-selected" : ""}`}
+                    aria-pressed={anxietyData.thoughts === thought.key}
+                    onClick={() =>
+                      setAnxietyData((prev) => ({
+                        ...prev,
+                        thoughts: prev.thoughts === thought.key ? "" : thought.key,
+                      }))
+                    }
+                  >
+                    {thought.emoji} {thought.label}
+                  </button>
                 ))}
-              </Row>
+              </div>
             </div>
           </div>
         );
 
-      case 'timing':
+      case "timing":
         return (
-          <div className="step-content">
-            <div className="timing-section">
-              <Title level={4}>¿Cuándo sueles sentirte más ansioso?</Title>
-              <Row gutter={[12, 12]} style={{ marginBottom: '32px' }}>
-                {timesOfDay.map((time) => (
-                  <Col xs={12} sm={6} key={time.key}>
-                    <Card
-                      hoverable
-                      className={`timing-card ${anxietyData.timeOfDay === time.key ? 'selected' : ''}`}
-                      onClick={() => setAnxietyData(prev => ({ ...prev, timeOfDay: time.key }))}
-                    >
-                      <div className="timing-content">
-                        <div className="timing-emoji">{time.emoji}</div>
-                        <Text>{time.label}</Text>
-                      </div>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
-
-              <Title level={4}>¿En qué lugares?</Title>
-              <Row gutter={[12, 12]}>
-                {places.map((place) => (
-                  <Col xs={12} sm={6} key={place.key}>
-                    <Card
-                      hoverable
-                      className={`timing-card ${anxietyData.place === place.key ? 'selected' : ''}`}
-                      onClick={() => setAnxietyData(prev => ({ ...prev, place: place.key }))}
-                    >
-                      <div className="timing-content">
-                        <div className="timing-emoji">{place.emoji}</div>
-                        <Text>{place.label}</Text>
-                      </div>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
-            </div>
-          </div>
-        );
-
-      case 'tips':
-        return (
-          <div className="step-content">
-            <div className="tips-header">
-              <CheckCircleOutlined style={{ fontSize: '48px', color: '#10b981', marginBottom: '16px' }} />
-              <Title level={3}>Estrategias personalizadas para ti</Title>
-              <Text style={{ color: '#6b7280', fontSize: '16px' }}>
-                Basadas en tus respuestas, aquí tienes algunas técnicas que pueden ayudarte
-              </Text>
-            </div>
-
-            <Row gutter={[16, 16]} style={{ marginTop: '32px' }}>
-              {getPersonalizedTips().map((tip, index) => (
-                <Col xs={24} sm={12} key={index}>
-                  <Card className="tip-card" style={{ borderLeft: `4px solid ${tip.color}` }}>
-                    <div className="tip-content">
-                      <div className="tip-header">
-                        <span className="tip-emoji">{tip.emoji}</span>
-                        <Title level={5} style={{ margin: 0, color: tip.color }}>
-                          {tip.title}
-                        </Title>
-                      </div>
-                      <Paragraph style={{ margin: '12px 0 0 0', fontSize: '14px', lineHeight: '1.5' }}>
-                        {tip.description}
-                      </Paragraph>
-                    </div>
-                  </Card>
-                </Col>
+          <div className="ms-pat-step">
+            <h4 className="ms-pat-heading">¿Cuándo suele aparecer más?</h4>
+            <div className="ms-pat-grid">
+              {timesOfDay.map((time) => (
+                <button
+                  key={time.key}
+                  type="button"
+                  className={`ms-select-card ${anxietyData.timeOfDay === time.key ? "is-selected" : ""}`}
+                  aria-pressed={anxietyData.timeOfDay === time.key}
+                  onClick={() => setAnxietyData((prev) => ({ ...prev, timeOfDay: time.key }))}
+                >
+                  <span className="ms-select-card__emoji">{time.emoji}</span>
+                  <span className="ms-select-card__label">{time.label}</span>
+                </button>
               ))}
-            </Row>
+            </div>
 
-            <div className="reminder-card">
-              <Card style={{ background: 'linear-gradient(135deg, #10b981, #059669)', border: 'none', marginTop: '24px' }}>
-                <div style={{ textAlign: 'center', color: 'white' }}>
-                  <BulbOutlined style={{ fontSize: '32px', marginBottom: '12px' }} />
-                  <Title level={4} style={{ color: 'white', margin: '0 0 8px 0' }}>
-                    Recuerda
-                  </Title>
-                  <Text style={{ color: 'white', fontSize: '16px' }}>
-                    La ansiedad es normal y temporal. Estas técnicas mejoran con la práctica. 
-                    Sé paciente contigo mismo/a. 💚
-                  </Text>
-                </div>
-              </Card>
+            <h4 className="ms-pat-heading" style={{ marginTop: 22 }}>
+              ¿En qué lugares?
+            </h4>
+            <div className="ms-pat-grid">
+              {places.map((place) => (
+                <button
+                  key={place.key}
+                  type="button"
+                  className={`ms-select-card ${anxietyData.place === place.key ? "is-selected" : ""}`}
+                  aria-pressed={anxietyData.place === place.key}
+                  onClick={() => setAnxietyData((prev) => ({ ...prev, place: place.key }))}
+                >
+                  <span className="ms-select-card__emoji">{place.emoji}</span>
+                  <span className="ms-select-card__label">{place.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+
+      case "tips":
+        return (
+          <div className="ms-pat-step">
+            <div className="tips-header">
+              <CheckCircle2
+                size={44}
+                strokeWidth={1.6}
+                color="var(--color-mint)"
+                style={{ marginBottom: 12 }}
+                aria-hidden
+              />
+              <h3 className="ms-title-lg" style={{ textAlign: "center" }}>
+                Ideas para probar
+              </h3>
+              <p className="ms-text" style={{ textAlign: "center" }}>
+                Según lo que marcaste, estas herramientas suelen ayudar.
+              </p>
+            </div>
+
+            <div className="ms-tip-grid">
+              {getPersonalizedTips().map((tip, index) => (
+                <article
+                  key={`${tip.title}-${index}`}
+                  className="ms-tip-card"
+                  style={{ "--tip-accent": tip.color } as CSSProperties}
+                >
+                  <div className="ms-tip-card__top">
+                    <span className="ms-tip-card__emoji">{tip.emoji}</span>
+                    <h4 className="ms-tip-card__title" style={{ color: "var(--color-ink)" }}>
+                      {tip.title}
+                    </h4>
+                  </div>
+                  <p className="ms-tip-card__body">{tip.description}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="ms-pat-reminder" style={{ marginTop: 18 }}>
+              <Lightbulb size={28} strokeWidth={1.8} style={{ marginBottom: 8 }} aria-hidden />
+              <h4>Recordá</h4>
+              <p>
+                La ansiedad es humana y cambia. Lo que probás hoy puede sentirse distinto mañana — la práctica
+                cuenta.
+              </p>
             </div>
           </div>
         );
@@ -351,74 +330,53 @@ const AnxietyPatterns: React.FC<AnxietyPatternsProps> = ({ visible, onClose }) =
     }
   };
 
+  const pct = steps[currentStep].progress;
+
   return (
     <Modal
       title={
-        <Space>
-          <HeartOutlined style={{ color: '#722ed1' }} />
-          <span>Patrones de Ansiedad</span>
-        </Space>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+          <Heart size={22} strokeWidth={2.2} aria-hidden />
+          <span>Patrones de ansiedad</span>
+        </span>
       }
       open={visible}
       onCancel={handleClose}
       footer={null}
       width={800}
+      centered
+      wrapClassName="ms-modal-activity ms-modal-activity--patterns"
       className="anxiety-patterns-modal"
-      closeIcon={<CloseOutlined />}
+      destroyOnClose
     >
-      <div className="anxiety-patterns-container">
-        {/* Progress Bar */}
-        <div className="progress-section">
-          <Progress 
-            percent={steps[currentStep].progress} 
-            strokeColor="#722ed1"
-            showInfo={false}
-            className="main-progress"
-          />
-          <Title level={3} style={{ textAlign: 'center', margin: '16px 0', color: '#722ed1' }}>
-            {steps[currentStep].title}
-          </Title>
+      <div className="ms-pat">
+        <div className="ms-pat-steps">
+          <div className="ms-pat-steps__bar" aria-hidden>
+            <div className="ms-pat-steps__fill" style={{ width: `${pct}%` }} />
+          </div>
+          <h3 className="ms-pat-steps__title">{steps[currentStep].title}</h3>
         </div>
 
-        {/* Step Content */}
         {renderStepContent()}
 
-        {/* Navigation */}
-        <div className="navigation-buttons">
-          <Space size="large">
-            {currentStep !== 'feeling' && (
-              <Button
-                size="large"
-                icon={<ArrowLeftOutlined />}
-                onClick={handlePrevious}
-                className="nav-button"
-              >
-                Anterior
-              </Button>
-            )}
-            
-            {currentStep !== 'tips' ? (
-              <Button
-                type="primary"
-                size="large"
-                icon={<ArrowRightOutlined />}
-                onClick={handleNext}
-                className="nav-button primary"
-              >
-                Siguiente
-              </Button>
-            ) : (
-              <Button
-                type="primary"
-                size="large"
-                icon={<CheckCircleOutlined />}
-                onClick={handleClose}
-                className="nav-button primary"
-              >
-                Completar
-              </Button>
-            )}
-          </Space>
+        <div className="ms-pat-nav">
+          {currentStep !== "feeling" && (
+            <button type="button" className="ms-btn" onClick={handlePrevious}>
+              <ArrowLeft size={18} strokeWidth={2.2} aria-hidden />
+              Anterior
+            </button>
+          )}
+          {currentStep !== "tips" ? (
+            <button type="button" className="ms-btn ms-btn--primary" onClick={handleNext}>
+              Siguiente
+              <ArrowRight size={18} strokeWidth={2.2} aria-hidden />
+            </button>
+          ) : (
+            <button type="button" className="ms-btn ms-btn--primary" onClick={handleClose}>
+              <CheckCircle2 size={18} strokeWidth={2.2} aria-hidden />
+              Listo
+            </button>
+          )}
         </div>
       </div>
     </Modal>
@@ -426,8 +384,3 @@ const AnxietyPatterns: React.FC<AnxietyPatternsProps> = ({ visible, onClose }) =
 };
 
 export default AnxietyPatterns;
-
-
-
-
-

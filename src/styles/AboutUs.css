@@ -1,12 +1,14 @@
 /* AboutUs.css */
 
-* {
+.about-container,
+.about-container * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 .about-container {
+  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   font-family: 'Poppins', sans-serif;

@@ -18,17 +18,22 @@ import EditEvent from "./pages/EditEvent";
 import UsersManagement from "./pages/UsersManagement";
 import UserDetail from "./pages/UserDetail";
 import CreateUser from "./pages/CreateUser";
-import Footer from "./components/Footer";
 import EditProfile from "./components/EditProfile";
 import Layout from "./components/Layout";
+import UserDashboardShell from "./components/UserDashboardShell";
 import Landing from "./pages/Landing";
 import Blogs from "./pages/Blogs";
+import BlogDetail from "./pages/BlogDetail";
+import ParentGuides from "./pages/ParentGuides";
+import Achievements from "./pages/Achievements";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 
 const AppContent = () => {
   const location = useLocation();
-  const hideSidebarAndFooter = ["/login", "/register", "/", "/about-us-guest"].includes(location.pathname);
+  const isPublicContentRoute =
+    ["/login", "/register", "/", "/about-us-guest", "/blogs", "/para-padres", "/achievements"].includes(location.pathname) ||
+    location.pathname.startsWith("/blogs/");
   const { theme } = useUser();
 
   useEffect(() => {
@@ -42,9 +47,29 @@ const AppContent = () => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+
+    const scrollContainers = [
+      ".layout-container .main-content",
+      ".layout-container .page-content",
+      ".dashboard-screen",
+      ".dash-main",
+    ];
+
+    scrollContainers.forEach((selector) => {
+      const element = document.querySelector(selector);
+      if (element instanceof HTMLElement) {
+        element.scrollTop = 0;
+      }
+    });
+  }, [location.pathname]);
+
   return (
     <div className={`app-container ${theme}`}>
-      {!hideSidebarAndFooter ? (
+      {!isPublicContentRoute ? (
         <Layout>
           <div className="content">
             <Routes>
@@ -52,7 +77,7 @@ const AppContent = () => {
                 path="/home" 
                 element={
                   <ProtectedRoute>
-                    <Home theme={theme} />
+                    <Home />
                   </ProtectedRoute>
                 } 
               />
@@ -60,7 +85,25 @@ const AppContent = () => {
                 path="/contacts" 
                 element={
                   <ProtectedRoute>
-                    <Contacts />
+                    <UserDashboardShell activeLabel="Ajustes">
+                      <Contacts />
+                    </UserDashboardShell>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/events/upcoming" 
+                element={
+                  <ProtectedRoute>
+                    <Events />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/events/past" 
+                element={
+                  <ProtectedRoute>
+                    <Events />
                   </ProtectedRoute>
                 } 
               />
@@ -76,15 +119,9 @@ const AppContent = () => {
                 path="/daily-summary" 
                 element={
                   <ProtectedRoute>
-                    <DailySummary />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/blogs" 
-                element={
-                  <ProtectedRoute>
-                    <Blogs />
+                    <UserDashboardShell activeLabel="Resumen">
+                      <DailySummary />
+                    </UserDashboardShell>
                   </ProtectedRoute>
                 } 
               />
@@ -100,7 +137,9 @@ const AppContent = () => {
                 path="/profile/edit" 
                 element={
                   <ProtectedRoute>
-                    <EditProfile />
+                    <UserDashboardShell activeLabel="Perfil">
+                      <EditProfile />
+                    </UserDashboardShell>
                   </ProtectedRoute>
                 } 
               />
@@ -195,6 +234,19 @@ const AppContent = () => {
               <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
               <Route path="/" element={<Landing />} />
               <Route path="/about-us-guest" element={<AboutUs />} />
+              <Route path="/blogs" element={<Blogs />} />
+              <Route path="/blogs/:id" element={<BlogDetail />} />
+              <Route path="/para-padres" element={<ParentGuides />} />
+              <Route
+                path="/achievements"
+                element={
+                  <ProtectedRoute>
+                    <UserDashboardShell activeLabel="Mis logros">
+                      <Achievements />
+                    </UserDashboardShell>
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
           </div>
         </div>

@@ -1,0 +1,25 @@
+.lp-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.lp-logo:hover {
+  text-decoration: none;
+}
+
+.lp-logo__icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.lp-logo__text {
+  line-height: 1;
+}
