@@ -334,7 +334,7 @@ const ImprovedSidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Menú - Área scrollable */}
-        <div style={{ flex: 1, overflow: 'hidden' }}>
+        <div className="sidebar-menu-wrapper">
           <Menu
             theme={theme}
             onClick={onClick}

@@ -19,7 +19,7 @@ const useResponsive = (): UseResponsiveReturn => {
     const checkScreenSize = () => {
       const width = window.innerWidth;
       
-      setIsMobile(width < 768);
+      setIsMobile(width < 1024);
       setIsTablet(width >= 768 && width < 1024);
       setIsDesktop(width >= 1024);
       

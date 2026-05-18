@@ -132,6 +132,18 @@
   margin-top: 8px;
 }
 
+.admin-quick-action-btn {
+  width: 100%;
+  min-height: 60px;
+  height: auto;
+  white-space: normal;
+  text-align: center;
+}
+
+.admin-filters-actions {
+  width: 100%;
+}
+
 /* Grid responsive para estadísticas */
 .admin-panel .stats-grid {
   display: grid;
@@ -198,6 +210,33 @@
   .admin-panel .ant-col {
     margin-bottom: 16px;
   }
+
+  .admin-quick-actions-row .ant-col {
+    margin-bottom: 0;
+  }
+
+  .admin-quick-action-btn {
+    min-height: 52px;
+    padding: 10px 12px;
+  }
+
+  .admin-stats-row .ant-col {
+    margin-bottom: 0;
+  }
+
+  .admin-filters-row .ant-col {
+    margin-bottom: 0;
+  }
+
+  .admin-filters-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .admin-filters-actions .ant-btn {
+    width: 100%;
+  }
   
   .admin-panel .ant-tabs-tab {
     font-size: 12px;
@@ -252,6 +291,10 @@
     height: 24px;
     padding: 0 8px;
     font-size: 11px;
+  }
+
+  .admin-quick-action-btn {
+    min-height: 48px;
   }
 }
 

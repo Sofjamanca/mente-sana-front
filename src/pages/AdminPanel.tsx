@@ -123,46 +123,46 @@ const AdminPanel: React.FC = () => {
 
       {/* Navegación Rápida */}
       <Card title="Gestión Rápida" style={{ marginBottom: 24 }}>
-        <Row gutter={16}>
-          <Col span={6}>
+        <Row gutter={[16, 16]} className="admin-quick-actions-row">
+          <Col xs={24} sm={12} lg={6}>
             <Button 
               type="primary" 
               icon={<FileTextOutlined />} 
               size="large" 
-              style={{ width: '100%', height: '60px' }}
+              className="admin-quick-action-btn"
               onClick={() => navigate('/admin/blogs')}
             >
               Gestionar Posts
             </Button>
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} lg={6}>
             <Button 
               type="primary" 
               icon={<CalendarOutlined />} 
               size="large" 
-              style={{ width: '100%', height: '60px' }}
+              className="admin-quick-action-btn"
               onClick={() => navigate('/admin/events')}
             >
               Gestionar Eventos
             </Button>
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} lg={6}>
             <Button 
               type="primary" 
               icon={<TeamOutlined />} 
               size="large" 
-              style={{ width: '100%', height: '60px' }}
+              className="admin-quick-action-btn"
               onClick={() => navigate('/admin/users')}
             >
               Gestionar Usuarios
             </Button>
           </Col>
-          <Col span={6}>
+          <Col xs={24} sm={12} lg={6}>
             <Button 
               type="default" 
               icon={<SettingOutlined />} 
               size="large" 
-              style={{ width: '100%', height: '60px' }}
+              className="admin-quick-action-btn"
               disabled
             >
               Configuración

@@ -1,118 +1,111 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Modal, Button, Progress, Typography, Space, Card } from 'antd';
-import { 
-  PlayCircleOutlined, 
-  PauseCircleOutlined, 
-  ReloadOutlined,
-  HeartOutlined,
-  CloseOutlined
-} from '@ant-design/icons';
-import '../styles/GuidedMeditation.css';
+import React, { useState, useEffect, useRef } from "react";
+import { Modal } from "antd";
+import { Heart, Pause, Play, RotateCcw, Wind } from "lucide-react";
+import "../styles/ms-activities.css";
+import "../styles/activity-modals.css";
 
-const { Title, Text } = Typography;
-
-type BreathingPhase = 'inhale' | 'hold' | 'exhale' | 'rest';
+type BreathingPhase = "inhale" | "hold" | "exhale" | "rest";
 
 interface GuidedMeditationProps {
   visible: boolean;
   onClose: () => void;
 }
 
+const PHASE_COLOR: Record<BreathingPhase, string> = {
+  inhale: "var(--color-mint)",
+  hold: "#ffc85c",
+  exhale: "var(--color-sky)",
+  rest: "color-mix(in srgb, var(--color-muted) 55%, var(--color-line))",
+};
+
+const PHASE_GRADIENT: Record<
+  BreathingPhase,
+  { hueA: number; hueB: number; opacity: number }
+> = {
+  inhale: { hueA: 162, hueB: 224, opacity: 0.95 },
+  hold: { hueA: 42, hueB: 24, opacity: 0.9 },
+  exhale: { hueA: 204, hueB: 268, opacity: 0.82 },
+  rest: { hueA: 34, hueB: 210, opacity: 0.34 },
+};
+
 const GuidedMeditation: React.FC<GuidedMeditationProps> = ({ visible, onClose }) => {
   const [isActive, setIsActive] = useState(false);
   const [currentRound, setCurrentRound] = useState(1);
-  const [currentPhase, setCurrentPhase] = useState<BreathingPhase>('rest');
+  const [currentPhase, setCurrentPhase] = useState<BreathingPhase>("rest");
   const [phaseTime, setPhaseTime] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
-  
+
   const totalRounds = 3;
   const phaseDurations = {
-    inhale: 5, // 6 segundos inhalar
-    hold: 5,   // 6 segundos aguantar
-    exhale: 6, // 8 segundos exhalar
-    rest: 3    // 3 segundos de descanso
+    inhale: 5,
+    hold: 5,
+    exhale: 6,
+    rest: 3,
   };
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const phaseMessages = {
-    inhale: 'Inhala profundamente...',
-    hold: 'Aguanta la respiración...',
-    exhale: 'Exhala lentamente...',
-    rest: 'Descansa...'
-  };
-
-  const phaseColors = {
-    inhale: '#10b981', // Verde suave consistente con Home
-    hold: '#f59e0b',   // Amarillo dorado
-    exhale: '#3b82f6', // Azul suave
-    rest: '#9ca3af'    // Gris suave
+  const phaseMessages: Record<BreathingPhase, string> = {
+    inhale: "Inhala profundamente…",
+    hold: "Aguantá la respiración…",
+    exhale: "Exhalá lento…",
+    rest: "Descansá…",
   };
 
   useEffect(() => {
     if (isActive && !isCompleted) {
       intervalRef.current = setInterval(() => {
-        setPhaseTime(prev => {
+        setPhaseTime((prev) => {
           const nextTime = prev + 0.1;
           const currentDuration = phaseDurations[currentPhase];
-          
+
           if (nextTime >= currentDuration) {
-            // Cambiar a la siguiente fase
-            if (currentPhase === 'rest') {
-              // Completar ronda actual
+            if (currentPhase === "rest") {
               if (currentRound >= totalRounds) {
                 setIsCompleted(true);
                 setIsActive(false);
                 return 0;
-              } else {
-                setCurrentRound(prev => prev + 1);
-                setCurrentPhase('inhale');
               }
-            } else if (currentPhase === 'inhale') {
-              setCurrentPhase('hold');
-            } else if (currentPhase === 'hold') {
-              setCurrentPhase('exhale');
-            } else if (currentPhase === 'exhale') {
-              setCurrentPhase('rest');
+              setCurrentRound((r) => r + 1);
+              setCurrentPhase("inhale");
+            } else if (currentPhase === "inhale") {
+              setCurrentPhase("hold");
+            } else if (currentPhase === "hold") {
+              setCurrentPhase("exhale");
+            } else if (currentPhase === "exhale") {
+              setCurrentPhase("rest");
             }
             return 0;
           }
-          
+
           return nextTime;
         });
       }, 100);
-    } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+    } else if (intervalRef.current) {
+      clearInterval(intervalRef.current);
     }
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [isActive, currentPhase, currentRound, isCompleted]);
 
   const handleStart = () => {
     setIsActive(true);
     if (isCompleted) {
-      // Reiniciar si ya había terminado
       resetMeditation();
     }
-    if (currentPhase === 'rest' && currentRound === 1 && phaseTime === 0) {
-      setCurrentPhase('inhale');
+    if (currentPhase === "rest" && currentRound === 1 && phaseTime === 0) {
+      setCurrentPhase("inhale");
     }
   };
 
-  const handlePause = () => {
-    setIsActive(false);
-  };
+  const handlePause = () => setIsActive(false);
 
   const resetMeditation = () => {
     setIsActive(false);
     setCurrentRound(1);
-    setCurrentPhase('rest');
+    setCurrentPhase("rest");
     setPhaseTime(0);
     setIsCompleted(false);
   };
@@ -128,184 +121,177 @@ const GuidedMeditation: React.FC<GuidedMeditationProps> = ({ visible, onClose })
   };
 
   const getTotalProgress = () => {
-    const phasesPerRound = 4; // inhale, hold, exhale, rest
+    const phasesPerRound = 4;
     const totalPhases = totalRounds * phasesPerRound;
-    
     let completedPhases = (currentRound - 1) * phasesPerRound;
-    
-    // Agregar fases completadas en la ronda actual
-    if (currentPhase === 'hold' || currentPhase === 'exhale' || currentPhase === 'rest') {
-      completedPhases += 1; // inhale completado
+
+    if (currentPhase === "hold" || currentPhase === "exhale" || currentPhase === "rest") {
+      completedPhases += 1;
     }
-    if (currentPhase === 'exhale' || currentPhase === 'rest') {
-      completedPhases += 1; // hold completado
+    if (currentPhase === "exhale" || currentPhase === "rest") {
+      completedPhases += 1;
     }
-    if (currentPhase === 'rest') {
-      completedPhases += 1; // exhale completado
+    if (currentPhase === "rest") {
+      completedPhases += 1;
     }
-    
-    // Agregar progreso de la fase actual
+
     const currentPhaseProgress = getPhaseProgress() / 100;
-    
     return ((completedPhases + currentPhaseProgress) / totalPhases) * 100;
   };
 
-  const getBreathingCircleScale = () => {
+  const getBreathingPulse = () => {
     const progress = getPhaseProgress() / 100;
-    
-    if (currentPhase === 'inhale') {
-      return 1 + (progress * 0.5); // Crece de 1 a 1.5
-    } else if (currentPhase === 'hold') {
-      return 1.5; // Se mantiene grande
-    } else if (currentPhase === 'exhale') {
-      return 1.5 - (progress * 0.5); // Decrece de 1.5 a 1
-    } else {
-      return 1; // Tamaño normal durante el descanso
-    }
+    const theme = PHASE_GRADIENT[currentPhase];
+    const intensity =
+      currentPhase === "inhale"
+        ? 0.18 + progress * 0.82
+        : currentPhase === "hold"
+          ? 1
+          : currentPhase === "exhale"
+            ? 1 - progress * 0.78
+            : 0.16;
+
+    return {
+      intensity,
+      scale: 1,
+      center: 30 + intensity * 30,
+      width: 32 + intensity * 138,
+      height: 34 + intensity * 142,
+      rotate: -96 + progress * 150,
+      opacity: theme.opacity,
+      hueA: theme.hueA,
+      hueB: theme.hueB,
+    };
   };
+
+  const totalPct = Math.round(getTotalProgress());
+  const breathPulse = getBreathingPulse();
+  const secsLeft = Math.ceil(phaseDurations[currentPhase] - phaseTime);
 
   return (
     <Modal
       title={
-        <Space>
-          <HeartOutlined style={{ color: '#52c41a' }} />
-          <span>Meditación Guiada - Respiración Profunda</span>
-        </Space>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+          <Wind size={22} strokeWidth={2.2} aria-hidden />
+          <span>Respiración guiada</span>
+        </span>
       }
       open={visible}
       onCancel={handleClose}
       footer={null}
       width={700}
+      centered
+      wrapClassName="ms-modal-activity ms-modal-activity--breath"
       className="guided-meditation-modal"
-      closeIcon={<CloseOutlined />}
+      destroyOnClose
     >
-      <div className="meditation-container">
+      <div className="ms-breath-root">
         {!isCompleted ? (
           <>
-            {/* Progreso Total */}
-            <Card className="progress-card">
-              <div className="progress-header">
-                <Title level={4}>
-                  Ronda {currentRound} de {totalRounds}
-                </Title>
-                <Progress 
-                  percent={Math.round(getTotalProgress())} 
-                  strokeColor="#52c41a"
-                  className="total-progress"
-                />
+            <div className="ms-panel">
+              <div className="ms-breath-round">
+                <span>
+                  Ronda {currentRound} / {totalRounds}
+                </span>
+                <span style={{ fontSize: 13, fontWeight: 600, color: "var(--color-muted)" }}>
+                  {totalPct}%
+                </span>
               </div>
-            </Card>
+              <div className="ms-progress-bar" aria-hidden>
+                <div className="ms-progress-bar__fill" style={{ width: `${totalPct}%` }} />
+              </div>
+            </div>
 
-            {/* Círculo de Respiración */}
-            <div className="breathing-circle-container">
-              <div 
-                className="breathing-circle"
-                style={{
-                  transform: `scale(${getBreathingCircleScale()})`,
-                  backgroundColor: phaseColors[currentPhase],
-                  transition: currentPhase === 'hold' ? 'none' : 'transform 0.1s ease-out'
-                }}
+            <div className="ms-breath-visual-wrap">
+              <div
+                className={`ms-breath-visual-scale ms-breath-visual-scale--${currentPhase}`}
+                style={
+                  {
+                    "--breath-intensity": breathPulse.intensity,
+                    "--breath-center": `${breathPulse.center}%`,
+                    "--breath-width": `${breathPulse.width}%`,
+                    "--breath-height": `${breathPulse.height}%`,
+                    "--breath-rotate": `${breathPulse.rotate}deg`,
+                    "--breath-opacity": breathPulse.opacity,
+                    "--breath-hue-a": breathPulse.hueA,
+                    "--breath-hue-b": breathPulse.hueB,
+                    transform: `scale(${breathPulse.scale})`,
+                    transition:
+                      currentPhase === "hold"
+                        ? "none"
+                        : "transform 0.22s cubic-bezier(0.33, 1, 0.68, 1)",
+                  } as React.CSSProperties
+                }
               >
-                <div className="breathing-circle-inner">
-                  <div className="phase-counter">
-                    {Math.ceil(phaseDurations[currentPhase] - phaseTime)}
+                <div className="ms-breath-visual">
+                  <div className="ms-breath-visual__gradient-mask" aria-hidden>
+                    <div className={`ms-breath-visual__gradient${isActive ? " is-active" : ""}`} />
+                  </div>
+                  <div className="ms-breath-visual__core" aria-hidden />
+                  <div className="ms-breath-visual__hud">
+                    <span className="ms-breath-visual__num">{secsLeft}</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Mensaje de Fase */}
-            <div className="phase-message">
-              <Title level={2} style={{ color: phaseColors[currentPhase], margin: 0 }}>
+            <div className="ms-breath-stage">
+              <p className="ms-breath-stage__msg" style={{ color: PHASE_COLOR[currentPhase] }}>
                 {phaseMessages[currentPhase]}
-              </Title>
-              <Text style={{ fontSize: '16px', color: '#666' }}>
-                {currentPhase !== 'rest' && (
-                  `${Math.ceil(phaseDurations[currentPhase] - phaseTime)} segundos`
-                )}
-              </Text>
+              </p>
+              <div className="ms-breath-stage__sub">
+                {currentPhase !== "rest" ? `${secsLeft} segundos` : "\u00a0"}
+              </div>
             </div>
 
-          
-            {/* Controles */}
-            <div className="meditation-controls">
-              <Space size="large">
-                <Button
-                  type="primary"
-                  size="large"
-                  icon={isActive ? <PauseCircleOutlined /> : <PlayCircleOutlined />}
-                  onClick={isActive ? handlePause : handleStart}
-                  className="control-button"
-                >
-                  {isActive ? 'Pausar' : 'Iniciar'}
-                </Button>
-                
-                <Button
-                  size="large"
-                  icon={<ReloadOutlined />}
-                  onClick={resetMeditation}
-                  className="control-button"
-                >
-                  Reiniciar
-                </Button>
-              </Space>
+            <div className="ms-btn-row">
+              <button type="button" className="ms-btn ms-btn--primary" onClick={isActive ? handlePause : handleStart}>
+                {isActive ? <Pause size={18} strokeWidth={2.2} /> : <Play size={18} strokeWidth={2.2} />}
+                {isActive ? "Pausar" : "Iniciar"}
+              </button>
+              <button type="button" className="ms-btn" onClick={resetMeditation}>
+                <RotateCcw size={18} strokeWidth={2.2} />
+                Reiniciar
+              </button>
             </div>
           </>
         ) : (
-          /* Pantalla de Completado */
-          <div className="completion-screen">
-            <div className="completion-icon">
-              <HeartOutlined style={{ fontSize: '72px', color: '#52c41a' }} />
+          <div className="ms-breath-done">
+            <div className="ms-breath-done__icon" aria-hidden>
+              <Heart size={56} strokeWidth={1.8} fill="currentColor" />
             </div>
-            
-            <Title level={2} style={{ color: '#52c41a', textAlign: 'center' }}>
-              ¡Meditación Completada!
-            </Title>
-            
-            <Text style={{ fontSize: '16px', textAlign: 'center', display: 'block', marginBottom: '24px' }}>
-              Has completado 5 rondas de respiración profunda. Tu mente y cuerpo están más relajados.
-            </Text>
+            <h2 className="ms-breath-done__title">Listo. Respiraste con calma.</h2>
+            <p className="ms-text" style={{ textAlign: "center", marginBottom: 20 }}>
+              Completaste {totalRounds} rondas. Un pequeño paso que ayuda a tu cuerpo a bajar la marcha.
+            </p>
 
-            <div className="completion-stats">
-              <Card>
-                <div className="stat-item">
-                  <Text strong>Tiempo total:</Text>
-                  <Text> ~6 minutos</Text>
-                </div>
-                <div className="stat-item">
-                  <Text strong>Respiraciones:</Text>
-                  <Text> 5 ciclos completos</Text>
-                </div>
-                <div className="stat-item">
-                  <Text strong>Estado:</Text>
-                  <Text style={{ color: '#52c41a' }}> Relajado</Text>
-                </div>
-              </Card>
+            <div className="ms-panel ms-breath-stats">
+              <div className="ms-breath-stats__row">
+                <strong>Rondas</strong>
+                <span>{totalRounds}</span>
+              </div>
+              <div className="ms-breath-stats__row">
+                <strong>Estado</strong>
+                <span style={{ color: "var(--color-mint)", fontWeight: 600 }}>Más presente</span>
+              </div>
             </div>
 
-            <div className="completion-controls">
-              <Space size="large">
-                <Button
-                  type="primary"
-                  size="large"
-                  icon={<ReloadOutlined />}
-                  onClick={() => {
-                    resetMeditation();
-                    handleStart();
-                  }}
-                  className="control-button"
-                >
-                  Meditar de Nuevo
-                </Button>
-                
-                <Button
-                  size="large"
-                  onClick={handleClose}
-                  className="control-button"
-                >
-                  Finalizar
-                </Button>
-              </Space>
+            <div className="ms-btn-row" style={{ marginTop: 20 }}>
+              <button
+                type="button"
+                className="ms-btn ms-btn--primary"
+                onClick={() => {
+                  resetMeditation();
+                  setIsActive(true);
+                  setCurrentPhase("inhale");
+                }}
+              >
+                <RotateCcw size={18} strokeWidth={2.2} />
+                Repetir
+              </button>
+              <button type="button" className="ms-btn" onClick={handleClose}>
+                Cerrar
+              </button>
             </div>
           </div>
         )}

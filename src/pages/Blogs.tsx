@@ -1,83 +1,126 @@
-import ArticleCard from "../components/ArticleCard";
-import "../styles/Blogs.css"
-import type { Article }  from "../components/ArticleCard";
+import { useMemo, useState } from "react";
+import { BookOpen, Clock3, Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import "../styles/Blogs.css";
+import { TEEN_RESOURCES } from "../data/teenResources";
+import PublicBlogNavbar from "../components/PublicBlogNavbar";
 
-
-const articles = [
-    {
-        id: 1,
-        title: "Mindfulness: Cómo empezar en 5 minutos al día",
-        description: "Aprendé técnicas simples de atención plena para reducir el estrés y mejorar tu concentración diaria.",
-        category: "Mindfulness",
-        author: "Dra. Laura Pérez",
-        isLiked: false,
-        image: "https://images.unsplash.com/photo-1551524164-687a55dd1126?fit=crop&w=600&h=400"
-    },
-    {
-        id: 2,
-        title: "Ansiedad: Cómo reconocerla y gestionarla",
-        description: "Conocé los síntomas más comunes de la ansiedad y estrategias efectivas para afrontarla día a día.",
-        category: "Ansiedad",
-        author: "Lic. Mateo Gómez",
-        isLiked: false,
-        image: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?fit=crop&w=600&h=400"
-    },
-    {
-        id: 3,
-        title: "Dormir mejor: Hábitos saludables para un descanso reparador",
-        description: "El sueño es clave para la salud mental. Estos consejos te ayudarán a mejorar tu higiene del sueño.",
-        category: "Sueño",
-        author: "Psic. Valentina Ruiz",
-        isLiked: false,
-        image: "https://www.bupasalud.com/sites/default/files/styles/640_x_400/public/articulos/2023-03/fotos/woman-sleeping.jpg?itok=yXLD8bhX"
-    },
-    {
-        id: 4,
-        title: "Redes de apoyo emocional: ¿por qué son tan importantes?",
-        description: "Tener personas con quien hablar es vital para tu bienestar. Te contamos cómo construir una red saludable.",
-        category: "Relaciones",
-        author: "Dr. Javier Castillo",
-        isLiked: false,
-        image: "https://images.unsplash.com/photo-1511988617509-a57c8a288659?fit=crop&w=600&h=400"
-    },
-    {
-        id: 5,
-        title: "Autoestima: Cómo fortalecerla en tu vida cotidiana",
-        description: "Descubrí herramientas prácticas para mejorar tu autoestima y sentirte mejor con vos mismo.",
-        category: "Autoestima",
-        author: "Psic. Camila Torres",
-        isLiked: false,
-        image: "https://upbility.es/cdn/shop/articles/blog_banners_3_58.png?v=1720608731&width=1600"
-    }
-];
-
-const Page = () => {
-    const handleLike = (id: number, liked: boolean) => {
-        console.log("Artículo like toggled:", id, liked);
-    };
-
-    const handleShare = (article: Article) => {
-        console.log("Compartir artículo:", article);
-    };
-
-    const handleClick = (article: Article) => {
-        console.log("Click en tarjeta:", article);
-    };
-
-    return (
-        <div className="blog-grid">
-            {articles.map(article => (
-                <ArticleCard
-                    key={article.id}
-                    article={article}
-                    onLike={handleLike}
-                    onShare={handleShare}
-                    onClick={handleClick}
-                />
-            ))}
-        </div>
-    );
+type BlogItem = {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  author: string;
+  readTime: string;
 };
 
+const BLOGS: BlogItem[] = TEEN_RESOURCES.map((resource) => ({
+  id: resource.id,
+  title: resource.title,
+  description: resource.description,
+  category: resource.category,
+  author: resource.author,
+  readTime: resource.readTime,
+}));
 
-export default Page;
+const Blogs = () => {
+  const navigate = useNavigate();
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("all");
+
+  const categories = useMemo(() => {
+    const base = Array.from(new Set(BLOGS.map((item) => item.category)));
+    return ["all", ...base];
+  }, []);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return BLOGS.filter((item) => {
+      const categoryOk = category === "all" || item.category === category;
+      if (!categoryOk) return false;
+      if (!q) return true;
+      return (
+        item.title.toLowerCase().includes(q) ||
+        item.description.toLowerCase().includes(q) ||
+        item.author.toLowerCase().includes(q) ||
+        item.category.toLowerCase().includes(q)
+      );
+    });
+  }, [query, category]);
+
+  return (
+    <div className="blogs-page">
+      <PublicBlogNavbar />
+      <div className="blogs-v2">
+        <header className="blogs-v2__header">
+          <div>
+            <p className="blogs-v2__kicker">Recursos</p>
+            <h1>Biblioteca de bienestar</h1>
+          </div>
+        </header>
+
+        <section className="blogs-v2__toolbar">
+          <label className="blogs-v2__search">
+            <Search size={15} />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Buscar por tema, titulo o autor..."
+            />
+          </label>
+          <div className="blogs-v2__tabs">
+            {categories.map((item) => (
+              <button
+                key={item}
+                className={category === item ? "active" : ""}
+                onClick={() => setCategory(item)}
+              >
+                {item === "all" ? "Todos" : item}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section className="blogs-v2__grid">
+          {filtered.map((item) => (
+            <article
+              key={item.id}
+              className="blogs-v2__card"
+              onClick={() => navigate(`/blogs/${item.id}`)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  navigate(`/blogs/${item.id}`);
+                }
+              }}
+            >
+              <img
+                src={`https://picsum.photos/seed/mente-${item.id}/900/500`}
+                alt={item.title}
+              />
+              <div className="blogs-v2__content">
+                <span className="blogs-v2__category">
+                  <BookOpen size={12} />
+                  {item.category}
+                </span>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+                <footer>
+                  <span>{item.author}</span>
+                  <span><Clock3 size={12} /> {item.readTime}</span>
+                </footer>
+              </div>
+            </article>
+          ))}
+          {filtered.length === 0 && (
+            <div className="blogs-v2__empty">No hay resultados para esa búsqueda.</div>
+          )}
+        </section>
+      </div>
+    </div>
+  );
+};
+
+export default Blogs;
