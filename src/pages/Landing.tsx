@@ -128,8 +128,12 @@ const parentCards = [
   {
     icon: MessageCircle,
     title: "Consejos para conversar",
-    copy: "Ideas para abrir charlas y fortalecer el vínculo.",
-    bullets: ["Cómo iniciar sin presionar", "Escucha activa y validación", "Qué decir y qué evitar"],
+    copy: "Ideas para abrir el diálogo y fortalecer el vínculo con tu hijo/a.",
+    bullets: [
+      "Cómo iniciar una conversación",
+      "Escucha activa y validación",
+      "Qué decir y qué evitar",
+    ],
     image: "mascotas_grupo.png",
   },
   {
@@ -156,7 +160,7 @@ const testimonials = [
     image: "mascota_coral.png",
   },
   {
-    quote: "Me acompaña cuando lo necesito. Ya no me siento tan sola.",
+    quote: "Me acompaña cuando lo necesito. Ya no me siento tan solo.",
     name: "Mateo, 17",
     role: "Estudiante",
     image: "mascota_explorar.png",
@@ -235,7 +239,7 @@ const Landing = () => {
           </p>
           <div className="lp-hero__actions">
             <a className="lp-btn lp-btn--primary" href="/register">
-              Empieza gratis
+              Registrarme gratis
               <ArrowRight size={18} strokeWidth={2.4} aria-hidden />
             </a>
             <button type="button" className="lp-btn lp-btn--secondary" onClick={() => scrollToSection("como-funciona")}>
@@ -413,9 +417,9 @@ const Landing = () => {
             const Icon = card.icon;
             return (
               <article key={card.title} className="lp-parent-card">
-                <div className="lp-parent-card__text">
+                <div className="lp-parent-card__main">
                   <span className="lp-card__icon" aria-hidden="true">
-                    <Icon size={24} strokeWidth={2} />
+                    <Icon size={22} strokeWidth={2} />
                   </span>
                   <h3 className="lp-h3">{card.title}</h3>
                   <p className="lp-body">{card.copy}</p>
@@ -429,9 +433,12 @@ const Landing = () => {
                   </ul>
                   <a className="lp-btn lp-btn--secondary lp-btn--compact" href="/para-padres">
                     Ver consejos
+                    <ArrowRight size={16} strokeWidth={2} aria-hidden />
                   </a>
                 </div>
-                <img src={asset(card.image)} alt="" className="lp-parent-card__img" />
+                <div className="lp-parent-card__visual" aria-hidden="true">
+                  <img src={asset(card.image)} alt="" className="lp-parent-card__img" />
+                </div>
               </article>
             );
           })}
